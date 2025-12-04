@@ -1,90 +1,146 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<title>Domanda del Giorno</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-<style>
- body{font-family:Poppins,sans-serif;background:linear-gradient(135deg,#dfe9f3,#fff);display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
- .card{background:#fff;width:90%;max-width:520px;padding:30px;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,.1);text-align:center}
- input,button,select{width:100%;padding:12px;border-radius:10px;border:1px solid #aaa;font-size:1rem;margin-top:10px}
- button{background:#4a90e2;color:#fff;border:none;cursor:pointer}
- button:hover{background:#2c74c9}
- #frase{margin-top:20px;font-size:1.2rem;font-weight:600;color:green}
-</style>
-<script src="https://www.gstatic.com/charts/loader.js"></script>
-<script>
-let dataTable;
-let sheetId = "1ABcpN8RaMmiOAAPY7Pvcxx_rrXAqlJY68N_nDWP48NI"; // <-- INSERISCI ID
-
-google.charts.load('current', {'packages':['table']});
-document.addEventListener("DOMContentLoaded",()=>{
- google.charts.setOnLoadCallback(loadSheet);
-});
-
-function loadSheet(){
- const query=new google.visualization.Query(`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tq=SELECT *`);
- query.send(resp=>{
-   if(resp.isError()){document.getElementById("domanda").textContent="Errore caricamento";return;}
-   dataTable=resp.getDataTable();
-   loadQuestionForDate(new Date());
- });
-}
-
-function getDayOfYear(d){const s=new Date(d.getFullYear(),0,1);return Math.floor((d-s)/(1000*60*60*24))+1;}
-
-function loadQuestionForDate(date){
- const day=getDayOfYear(date);
- document.getElementById("datePicker").value=date.toISOString().substring(0,10);
- for(let i=0;i<dataTable.getNumberOfRows();i++){
-   if(dataTable.getValue(i,0)==day){
-     document.getElementById("domanda").textContent=dataTable.getValue(i,1);
-     document.getElementById("rispostaCorretta").value=dataTable.getValue(i,2);
-     document.getElementById("fraseTesto").value=dataTable.getValue(i,3);
-     document.getElementById("frase").textContent="";
-     loadUserResult(day);
-     return;
-   }
- }
- document.getElementById("domanda").textContent="Nessuna domanda trovata";
-}
-
-function onDateChange(){
- const d=new Date(document.getElementById("datePicker").value);
- loadQuestionForDate(d);
-}
-
-function verifica(){
- const user=document.getElementById("risposta").value.trim().toLowerCase();
- const correct=document.getElementById("rispostaCorretta").value.trim().toLowerCase();
- const frase=document.getElementById("fraseTesto").value;
- const day=getDayOfYear(new Date(document.getElementById("datePicker").value));
-
- if(user===correct){document.getElementById("frase").textContent=frase;saveUserResult(day,true);} 
- else{document.getElementById("frase").textContent="Risposta errata";document.getElementById("frase").style.color="red";saveUserResult(day,false);} 
-}
-
-// LocalStorage save & load
-function saveUserResult(day,ok){localStorage.setItem("risultato_"+day,ok?"corretto":"errato");}
-function loadUserResult(day){
- const r=localStorage.getItem("risultato_"+day);
- if(!r)return;
- if(r==="corretto"){document.getElementById("frase").textContent="Già risposto correttamente";document.getElementById("frase").style.color="green";} 
- else{document.getElementById("frase").textContent="Hai già risposto ma era errato";document.getElementById("frase").style.color="red";} 
-}
-</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Domanda del Giorno</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 650px;
+      width: 100%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1 { text-align: center; }
+    input[type="text"], input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #0077ff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .message { margin-top: 20px; font-weight: bold; }
+    .correct { color: green; }
+    .wrong { color: red; }
+  </style>
 </head>
 <body>
-<div class="card">
- <h2>Domanda del giorno</h2>
- <input type="date" id="datePicker" onchange="onDateChange()">
- <p id="domanda">Caricamento...</p>
- <input id="risposta" placeholder="Scrivi la risposta...">
- <button onclick="verifica()">Invia</button>
- <p id="frase"></p>
- <input type="hidden" id="rispostaCorretta">
- <input type="hidden" id="fraseTesto">
-</div>
+  <div class="container">
+    <h1>Domanda del Giorno</h1>
+
+    <label>Seleziona data:</label>
+    <input type="date" id="datePicker" />
+
+    <h2 id="question"></h2>
+
+    <input type="text" id="answerInput" placeholder="Scrivi la tua risposta" />
+    <button onclick="checkAnswer()">Invia</button>
+
+    <p id="resultMessage" class="message"></p>
+  </div>
+
+  <script>
+    // --- DATABASE SEMPLICE INSERITO NEL CODICE ---
+    // Suggerito: gestire domande/risposte/frasi con un file JSON esterno facile da modificare
+    const qaData = {
+      "2026-01-01": {
+        question: "Qual è il primo giorno dell'anno?",
+        answer: "1 gennaio",
+        phrase: "Ottimo inizio!"
+      },
+      "2026-01-02": {
+        question: "Quanto fa 2+2?",
+        answer: "4",
+        phrase: "Risposta perfetta!"
+      },
+      "2026-01-03": {
+        question: "Colore del cielo in una giornata limpida?",
+        answer: "blu",
+        phrase: "Ben fatto!"
+      }
+      // ...qui puoi aggiungere tutte le date del 2026
+    };
+
+    // Quando si apre la pagina, mostra la domanda di oggi
+    window.onload = function () {
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("datePicker").value = today;
+      loadQuestion(today);
+    };
+
+    // Cambiare data con il selettore
+    document.getElementById("datePicker").addEventListener("change", function () {
+      loadQuestion(this.value);
+    });
+
+    function loadQuestion(date) {
+      const qElement = document.getElementById("question");
+      const msg = document.getElementById("resultMessage");
+      msg.textContent = "";
+      msg.className = "message";
+      document.getElementById("answerInput").value = "";
+
+      if (qaData[date]) {
+        qElement.textContent = qaData[date].question;
+
+        // Controlla se l'utente ha già risposto
+        const saved = localStorage.getItem("result-" + date);
+        if (saved) {
+          if (saved === "correct") {
+            msg.textContent = qaData[date].phrase;
+            msg.classList.add("correct");
+          } else {
+            msg.textContent = "Hai già risposto ma era sbagliato.";
+            msg.classList.add("wrong");
+          }
+        }
+      } else {
+        qElement.textContent = "Nessuna domanda per questa data.";
+      }
+    }
+
+    function checkAnswer() {
+      const date = document.getElementById("datePicker").value;
+      const userAns = document.getElementById("answerInput").value.trim().toLowerCase();
+      const msg = document.getElementById("resultMessage");
+
+      if (!qaData[date]) {
+        msg.textContent = "Nessuna domanda disponibile.";
+        msg.className = "message wrong";
+        return;
+      }
+
+      const correct = qaData[date].answer.toLowerCase();
+
+      if (userAns === correct) {
+        msg.textContent = qaData[date].phrase;
+        msg.className = "message correct";
+        localStorage.setItem("result-" + date, "correct");
+      } else {
+        msg.textContent = "Risposta sbagliata.";
+        msg.className = "message wrong";
+        localStorage.setItem("result-" + date, "wrong");
+      }
+    }
+  </script>
 </body>
 </html>
-
