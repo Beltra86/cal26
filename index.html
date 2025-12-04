@@ -59,35 +59,25 @@
   </div>
 
   <script>
-    // --- DATABASE SEMPLICE INSERITO NEL CODICE ---
-    // Suggerito: gestire domande/risposte/frasi con un file JSON esterno facile da modificare
-    const qaData = {
-      "2026-01-01": {
-        question: "Qual è il primo giorno dell'anno?",
-        answer: "1 gennaio",
-        phrase: "Ottimo inizio!"
-      },
-      "2026-01-02": {
-        question: "Quanto fa 2+2?",
-        answer: "4",
-        phrase: "Risposta perfetta!"
-      },
-      "2026-01-03": {
-        question: "Colore del cielo in una giornata limpida?",
-        answer: "blu",
-        phrase: "Ben fatto!"
-      }
-      // ...qui puoi aggiungere tutte le date del 2026
-    };
+    let qaData = {};
 
-    // Quando si apre la pagina, mostra la domanda di oggi
-    window.onload = function () {
+    // Carica Q.json
+    fetch("Q.json")
+      .then(response => response.json())
+      .then(data => {
+        qaData = data;
+        initialize();
+      })
+      .catch(() => {
+        document.getElementById("question").textContent = "Errore nel caricamento di Q.json";
+      });
+
+    function initialize() {
       const today = new Date().toISOString().split("T")[0];
       document.getElementById("datePicker").value = today;
       loadQuestion(today);
-    };
+    }
 
-    // Cambiare data con il selettore
     document.getElementById("datePicker").addEventListener("change", function () {
       loadQuestion(this.value);
     });
@@ -102,7 +92,6 @@
       if (qaData[date]) {
         qElement.textContent = qaData[date].question;
 
-        // Controlla se l'utente ha già risposto
         const saved = localStorage.getItem("result-" + date);
         if (saved) {
           if (saved === "correct") {
