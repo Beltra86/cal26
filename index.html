@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Domanda del Giorno</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+ body{font-family:Poppins,sans-serif;background:linear-gradient(135deg,#dfe9f3,#fff);display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
+ .card{background:#fff;width:90%;max-width:520px;padding:30px;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,.1);text-align:center}
+ input,button,select{width:100%;padding:12px;border-radius:10px;border:1px solid #aaa;font-size:1rem;margin-top:10px}
+ button{background:#4a90e2;color:#fff;border:none;cursor:pointer}
+ button:hover{background:#2c74c9}
+ #frase{margin-top:20px;font-size:1.2rem;font-weight:600;color:green}
+</style>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+let dataTable;
+let sheetId = "SHEET_ID"; // <-- INSERISCI ID
+
+google.charts.load('current', {'packages':['table']});
+document.addEventListener("DOMContentLoaded",()=>{
+ google.charts.setOnLoadCallback(loadSheet);
+});
+
+function loadSheet(){
+ const query=new google.visualization.Query(`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tq=SELECT *`);
+ query.send(resp=>{
+   if(resp.isError()){document.getElementById("domanda").textContent="Errore caricamento";return;}
+   dataTable=resp.getDataTable();
+   loadQuestionForDate(new Date());
+ });
+}
+
+function getDayOfYear(d){const s=new Date(d.getFullYear(),0,1);return Math.floor((d-s)/(1000*60*60*24))+1;}
+
+function loadQuestionForDate(date){
+ const day=getDayOfYear(date);
+ document.getElementById("datePicker").value=date.toISOString().substring(0,10);
+ for(let i=0;i<dataTable.getNumberOfRows();i++){
+   if(dataTable.getValue(i,0)==day){
+     document.getElementById("domanda").textContent=dataTable.getValue(i,1);
+     document.getElementById("rispostaCorretta").value=dataTable.getValue(i,2);
+     document.getElementById("fraseTesto").value=dataTable.getValue(i,3);
+     document.getElementById("frase").textContent="";
+     loadUserResult(day);
+     return;
+   }
+ }
+ document.getElementById("domanda").textContent="Nessuna domanda trovata";
+}
+
+function onDateChange(){
+ const d=new Date(document.getElementById("datePicker").value);
+ loadQuestionForDate(d);
+}
+
+function verifica(){
+ const user=document.getElementById("risposta").value.trim().toLowerCase();
+ const correct=document.getElementById("rispostaCorretta").value.trim().toLowerCase();
+ const frase=document.getElementById("fraseTesto").value;
+ const day=getDayOfYear(new Date(document.getElementById("datePicker").value));
+
+ if(user===correct){document.getElementById("frase").textContent=frase;saveUserResult(day,true);} 
+ else{document.getElementById("frase").textContent="Risposta errata";document.getElementById("frase").style.color="red";saveUserResult(day,false);} 
+}
+
+// LocalStorage save & load
+function saveUserResult(day,ok){localStorage.setItem("risultato_"+day,ok?"corretto":"errato");}
+function loadUserResult(day){
+ const r=localStorage.getItem("risultato_"+day);
+ if(!r)return;
+ if(r==="corretto"){document.getElementById("frase").textContent="Già risposto correttamente";document.getElementById("frase").style.color="green";} 
+ else{document.getElementById("frase").textContent="Hai già risposto ma era errato";document.getElementById("frase").style.color="red";} 
+}
+</script>
+</head>
+<body>
+<div class="card">
+ <h2>Domanda del giorno</h2>
+ <input type="date" id="datePicker" onchange="onDateChange()">
+ <p id="domanda">Caricamento...</p>
+ <input id="risposta" placeholder="Scrivi la risposta...">
+ <button onclick="verifica()">Invia</button>
+ <p id="frase"></p>
+ <input type="hidden" id="rispostaCorretta">
+ <input type="hidden" id="fraseTesto">
+</div>
+</body>
+</html>
