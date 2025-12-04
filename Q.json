@@ -1,4 +1,11 @@
 {
+  
+  "2025-12-04": {
+    "question": "Vero?",
+    "answer": "Vero",
+    "phrase": "Sciopa!"
+  },
+  
   "2026-01-01": {
     "question": "Qual è il primo giorno dell'anno?",
     "answer": "1 gennaio",
@@ -9,4 +16,5 @@
     "answer": "4",
     "phrase": "Risposta perfetta!"
   }
+
 }
