@@ -1,24 +1,20 @@
 {
-  
   "2025-12-04": {
     "question": "Vero?",
     "answer": "Vero",
-    "phrase": "Sciopa!"
-    "disclaimer": "Vaben?"
+    "phrase": "Sciopa!",
+    "disclaimer": "Attenzione, questa è una domanda di prova!"
   },
-  
   "2026-01-01": {
     "question": "Qual è il primo giorno dell'anno?",
     "answer": "1 gennaio",
-    "phrase": "Ottimo inizio!"
-    "disclaimer": "Vaben?"
+    "phrase": "Ottimo inizio!",
+    "disclaimer": "Buon anno! Iniziamo con un classico."
   },
   "2026-01-02": {
     "question": "Quanto fa 2+2?",
     "answer": "4",
-    "phrase": "Risposta perfetta!"
-    "disclaimer": "Vaben?"
+    "phrase": "Risposta perfetta!",
+    "disclaimer": "Oggi è il giorno della matematica facile."
   }
-
 }
-
