@@ -36,6 +36,7 @@
             margin-top: 20px;
             text-align: center;
         }
+        /* Assicuriamo che la modale sia SEMPRE visibile all'inizio */
         #disclaimer-modal {
             position: fixed;
             top: 0;
@@ -43,9 +44,10 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.7);
-            display: flex;
+            display: flex; /* La modale è visibile di default */
             justify-content: center;
             align-items: center;
+            z-index: 1000; /* Assicuriamo che sia sopra ogni cosa */
         }
         #disclaimer-box {
             background: white;
@@ -60,7 +62,8 @@
 
 <div id="disclaimer-modal">
     <div id="disclaimer-box">
-        <p id="disclaimer-text">Caricamento...</p>
+        <h4>Disclaimer del Giorno</h4>
+        <p id="disclaimer-text">Caricamento del disclaimer...</p>
         <button onclick="closeDisclaimer()">OK</button>
     </div>
 </div>
@@ -83,19 +86,30 @@
 <script>
 let DATA = {};
 let currentDate = "";
-let results = JSON.parse(localStorage.getItem("results2026") || "{}");
+// Nuovo nome per evitare conflitti con dati vecchi
+let results = JSON.parse(localStorage.getItem("results_domanda_giorno") || "{}");
 
+// ********** Correzione 1: Caricamento JSON **********
 fetch("Q.json")
-    .then(r => r.json())
+    .then(r => {
+        if (!r.ok) throw new Error("Errore nel caricamento di Q.json: " + r.statusText);
+        return r.json();
+    })
     .then(json => {
         DATA = json;
-        document.getElementById("disclaimer-text").innerText = DATA.disclaimer || "Benvenuto!";
         init();
+    })
+    .catch(err => {
+        console.error("Errore fatale:", err);
+        document.getElementById("disclaimer-text").innerText = "Errore nel caricamento dei dati. Controlla la console.";
+        // Manteniamo la modale aperta in caso di errore
     });
+
 
 function init() {
     const today = new Date();
-    const yyyy = 2026;
+    // ********** Correzione 2: Anno dinamico **********
+    const yyyy = today.getFullYear(); 
     const mm = String(today.getMonth() + 1).padStart(2, "0");
     const dd = String(today.getDate()).padStart(2, "0");
     currentDate = `${yyyy}-${mm}-${dd}`;
@@ -104,8 +118,14 @@ function init() {
     loadDay(currentDate);
 }
 
+// Funzione per nascondere la modale
 function closeDisclaimer() {
     document.getElementById("disclaimer-modal").style.display = "none";
+}
+
+// Funzione per mostrare la modale (utile nel cambio data)
+function showDisclaimer() {
+    document.getElementById("disclaimer-modal").style.display = "flex";
 }
 
 function changeDate() {
@@ -116,42 +136,69 @@ function changeDate() {
 function loadDay(dateStr) {
     const data = DATA[dateStr];
 
-    // immagine sinistra
-    document.getElementById("left-img").innerHTML = `<img src="Sx/${dateStr}.jpg" alt="sx">`;
+    // ********** Nuova Logica: Carica e mostra il Disclaimer Giornaliero **********
+    if (data) {
+        // Se i dati esistono, mostra il disclaimer specifico del giorno
+        document.getElementById("disclaimer-text").innerText = data.disclaimer || "Nessun disclaimer specifico per oggi.";
+    } else {
+        // Se non ci sono dati, mostra un messaggio di errore
+        document.getElementById("disclaimer-text").innerText = "Nessuna domanda trovata per questa data.";
+    }
+    // Rendi la modale visibile ogni volta che la data cambia o viene caricata
+    showDisclaimer();
+    // *************************************************************************
 
-    // reset area destra
+    // ********** Logica standard del caricamento del giorno **********
+    
+    // Immagine sinistra (Aggiunto onerror per gestire le immagini mancanti)
+    document.getElementById("left-img").innerHTML = `<img src="Sx/${dateStr}.jpg" alt="Immagine sx" onerror="this.onerror=null; this.src='placeholder_sx.jpg'; this.alt='Immagine mancante'">`;
+
+    // Reset area destra
     document.getElementById("right-img").innerHTML = "";
+    document.getElementById("feedback").innerText = "";
+    document.getElementById("answer").value = "";
 
     if (!data) {
         document.getElementById("question").innerText = "Nessuna domanda trovata.";
         return;
     }
 
-    document.getElementById("question").innerText = data.domanda;
-    document.getElementById("feedback").innerText = "";
-    document.getElementById("answer").value = "";
+    // ********** Correzione 3: Sincronizzazione Nomi Variabili (uso le chiavi in inglese dal JSON) **********
+    document.getElementById("question").innerText = data.question;
 
     if (results[dateStr] === true) {
         showRightImage(dateStr);
+        document.getElementById("feedback").innerText = `Hai già risposto correttamente: "${data.answer}"`;
     }
 }
 
 function checkAnswer() {
+    const data = DATA[currentDate];
+
+    // Controlla se ci sono dati per il giorno corrente
+    if (!data) {
+        document.getElementById("feedback").innerText = "Errore: Nessuna domanda caricata.";
+        return;
+    }
+
     const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
-    const correct = DATA[currentDate].risposta.trim().toLowerCase();
+    // ********** Correzione 3: Sincronizzazione Nomi Variabili **********
+    const correct = data.answer.toString().trim().toLowerCase();
 
     if (userAnswer === correct) {
-        document.getElementById("feedback").innerText = DATA[currentDate].frase;
+        // ********** Correzione 3: Sincronizzazione Nomi Variabili **********
+        document.getElementById("feedback").innerText = data.phrase;
         results[currentDate] = true;
-        localStorage.setItem("results2026", JSON.stringify(results));
+        localStorage.setItem("results_domanda_giorno", JSON.stringify(results));
         showRightImage(currentDate);
     } else {
-        document.getElementById("feedback").innerText = "Risposta errata.";
+        document.getElementById("feedback").innerText = "Risposta errata. Riprova!";
     }
 }
 
 function showRightImage(dateStr) {
-    document.getElementById("right-img").innerHTML = `<img src="Dx/${dateStr}.jpg" alt="dx">`;
+    // Aggiunto onerror per gestire le immagini mancanti
+    document.getElementById("right-img").innerHTML = `<img src="Dx/${dateStr}.jpg" alt="Immagine dx" onerror="this.onerror=null; this.src='placeholder_dx.jpg'; this.alt='Immagine mancante'">`;
 }
 </script>
 
