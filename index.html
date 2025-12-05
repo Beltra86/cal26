@@ -100,10 +100,8 @@
 <script>
 let DATA = {};
 let currentDate = "";
-// Nuovo nome per evitare conflitti con dati vecchi
 let results = JSON.parse(localStorage.getItem("results_domanda_giorno") || "{}");
 
-// ********** Correzione 1: Caricamento JSON **********
 fetch("Q.json")
     .then(r => {
         if (!r.ok) throw new Error("Errore nel caricamento di Q.json: " + r.statusText);
@@ -116,13 +114,11 @@ fetch("Q.json")
     .catch(err => {
         console.error("Errore fatale:", err);
         document.getElementById("disclaimer-text").innerText = "Errore nel caricamento dei dati. Controlla la console.";
-        // Manteniamo la modale aperta in caso di errore
     });
 
 
 function init() {
     const today = new Date();
-    // ********** Correzione 2: Anno dinamico **********
     const yyyy = today.getFullYear(); 
     const mm = String(today.getMonth() + 1).padStart(2, "0");
     const dd = String(today.getDate()).padStart(2, "0");
@@ -132,12 +128,10 @@ function init() {
     loadDay(currentDate);
 }
 
-// Funzione per nascondere la modale
 function closeDisclaimer() {
     document.getElementById("disclaimer-modal").style.display = "none";
 }
 
-// Funzione per mostrare la modale (utile nel cambio data)
 function showDisclaimer() {
     document.getElementById("disclaimer-modal").style.display = "flex";
 }
@@ -148,50 +142,80 @@ function changeDate() {
 }
 
 function loadDay(dateStr) {
+    // 1. PREPARAZIONE DELLE DATE PER IL CONFRONTO
+    const today = new Date();
+    // Formato YYYY/MM/DD per creare un Date object affidabile solo con la data di oggi
+    const todayStr = today.getFullYear() + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + String(today.getDate()).padStart(2, '0');
+    
+    // Converte le stringhe in Date objects (solo la data, senza orario)
+    const selectedDate = new Date(dateStr.replace(/-/g, '/'));
+    const currentDateOnly = new Date(todayStr);
+    
+    // Ottiene gli elementi per manipolazione
+    const answerInput = document.getElementById("answer");
+    const checkButton = document.querySelector("#center-qa button");
+    const feedbackElement = document.getElementById("feedback");
+    const questionElement = document.getElementById("question");
+    
+    // Eseguire il reset dei contenuti dinamici e dello stile
+    document.getElementById("left-img").innerHTML = `Immagine sinistra`; // Reset immagine Sx
+    document.getElementById("right-img").innerHTML = "";
+    answerInput.value = "";
+    feedbackElement.innerText = "";
+    feedbackElement.classList.remove("feedback-correct", "feedback-error");
+    
+    
+    // 2. CONTROLLO DATA FUTURA
+    // Se la data selezionata (in millisecondi) è maggiore di oggi (in millisecondi)
+    if (selectedDate.getTime() > currentDateOnly.getTime()) {
+        // Disabilita interazione e mostra errore
+        answerInput.disabled = true;
+        checkButton.disabled = true;
+        
+        questionElement.innerText = "⚠️ Non puoi visualizzare le domande future.";
+        document.getElementById("disclaimer-text").innerText = "Torna su questa data quando sarà attuale!";
+        showDisclaimer();
+        
+        document.getElementById("left-img").innerHTML = `<div style="text-align:center; padding: 20px;">📅 Data Futura</div>`;
+        return; // Esce dalla funzione
+    }
+    
+    // 3. CARICAMENTO NORMALE (Data odierna o Passata)
+    
+    // Riabilita interazione
+    answerInput.disabled = false;
+    checkButton.disabled = false;
+    
     const data = DATA[dateStr];
 
-    // ********** Nuova Logica: Carica e mostra il Disclaimer Giornaliero **********
-    if (data) {
-        // Se i dati esistono, mostra il disclaimer specifico del giorno
-        document.getElementById("disclaimer-text").innerText = data.disclaimer || "Nessun disclaimer specifico per oggi.";
-    } else {
-        // Se non ci sono dati, mostra un messaggio di errore
-        document.getElementById("disclaimer-text").innerText = "Nessuna domanda trovata per questa data.";
-    }
-    // Rendi la modale visibile ogni volta che la data cambia o viene caricata
-    showDisclaimer();
-    // *************************************************************************
-
-    // ********** Logica standard del caricamento del giorno **********
-    
-    // Immagine sinistra (Aggiunto onerror per gestire le immagini mancanti)
+    // Immagine sinistra
     document.getElementById("left-img").innerHTML = `<img src="Sx/${dateStr}.jpg" alt="Immagine sx" onerror="this.onerror=null; this.src='placeholder_sx.jpg'; this.alt='Immagine mancante'">`;
 
-    // Reset area destra
-    document.getElementById("right-img").innerHTML = "";
-    document.getElementById("feedback").innerText = "";
-    document.getElementById("answer").value = "";
-
-    // Rimuove le classi di colore dal feedback ogni volta che si carica un nuovo giorno
-    document.getElementById("feedback").classList.remove("feedback-correct", "feedback-error");
-    
     if (!data) {
-        document.getElementById("question").innerText = "Nessuna domanda trovata.";
+        questionElement.innerText = "Nessuna domanda trovata.";
+        document.getElementById("disclaimer-text").innerText = "Nessuna domanda trovata per questa data.";
+        showDisclaimer();
         return;
     }
 
-    // ********** Correzione 3: Sincronizzazione Nomi Variabili (uso le chiavi in inglese dal JSON) **********
-    document.getElementById("question").innerText = data.question;
+    // Carica Disclaimer e Domanda
+    document.getElementById("disclaimer-text").innerText = data.disclaimer || "Nessun disclaimer specifico per oggi.";
+    showDisclaimer();
+    
+    questionElement.innerText = data.question;
 
+    // Controllo se è già stata risolta
     if (results[dateStr] === true) {
         showRightImage(dateStr);
-        document.getElementById("feedback").innerText = `Hai già risposto correttamente: "${data.answer}"`;
+        feedbackElement.innerText = `Hai già risposto correttamente: "${data.answer}"`;
+        feedbackElement.classList.add("feedback-correct");
     }
 }
 
 function checkAnswer() {
     const data = DATA[currentDate];
 
+    // Controlla se ci sono dati per il giorno corrente
     if (!data) {
         document.getElementById("feedback").innerText = "Errore: Nessuna domanda caricata.";
         return;
@@ -199,7 +223,7 @@ function checkAnswer() {
 
     const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
     const correct = data.answer.toString().trim().toLowerCase();
-    
+
     // Ottieni l'elemento feedback una sola volta
     const feedbackElement = document.getElementById("feedback");
 
@@ -207,7 +231,7 @@ function checkAnswer() {
         // CORRETTO (VERDE)
         feedbackElement.innerText = data.phrase;
         
-        // NUOVO: Aggiungi la classe verde e rimuovi quella rossa
+        // Aggiungi la classe verde e rimuovi quella rossa
         feedbackElement.classList.add("feedback-correct");
         feedbackElement.classList.remove("feedback-error");
 
@@ -218,20 +242,20 @@ function checkAnswer() {
         // ERRATO (ROSSO)
         feedbackElement.innerText = "Risposta errata. Riprova!";
         
-        // NUOVO: Aggiungi la classe rossa e rimuovi quella verde
+        // Aggiungi la classe rossa e rimuovi quella verde
         feedbackElement.classList.add("feedback-error");
         feedbackElement.classList.remove("feedback-correct");
     }
 }
 
 function showRightImage(dateStr) {
-    // Aggiunto onerror per gestire le immagini mancanti
     document.getElementById("right-img").innerHTML = `<img src="Dx/${dateStr}.jpg" alt="Immagine dx" onerror="this.onerror=null; this.src='placeholder_dx.jpg'; this.alt='Immagine mancante'">`;
 }
 </script>
 
 </body>
 </html>
+
 
 
 
