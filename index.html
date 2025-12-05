@@ -6,11 +6,15 @@
     <title>E' quello in cinma?</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+           font-family: Arial, sans-serif;
+            margin: 0; /* Rimuovi il margine predefinito per usare l'intera altezza */
+            
+            /* NUOVE PROPRIETÀ PER IL CENTRAGGIO VERTICALE */
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: column; /* Imposta l'asse principale su colonna */
+            align-items: center;    /* Centra orizzontalmente i contenuti */
+            justify-content: center;  /* Centra verticalmente i contenuti */
+            min-height: 100vh;      /* Forza il body ad occupare l'intera altezza della finestra */
         }
         #container {
             display: flex; /* Mantiene la flessibilità per allineare gli elementi fianco a fianco */
@@ -254,6 +258,7 @@ function showRightImage(dateStr) {
 
 </body>
 </html>
+
 
 
 
