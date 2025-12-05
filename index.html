@@ -192,7 +192,7 @@ function loadDay(dateStr) {
     const data = DATA[dateStr];
 
     // Immagine sinistra
-    document.getElementById("left-img").innerHTML = `<img src="Sx/${dateStr}.jpg" alt="Immagine sx" onerror="this.onerror=null; this.src='placeholder_sx.jpg'; this.alt='Immagine mancante'">`;
+    document.getElementById("left-img").innerHTML = `<img src="Sx/${dateStr}.jpg" alt="Immagine sx" onerror="this.onerror=null; this.src='Sx/placeholder_sx.jpg'; this.alt='Immagine mancante'">`;
 
     if (!data) {
         questionElement.innerText = "Nessuna domanda trovata.";
@@ -252,12 +252,13 @@ function checkAnswer() {
 }
 
 function showRightImage(dateStr) {
-    document.getElementById("right-img").innerHTML = `<img src="Dx/${dateStr}.jpg" alt="Immagine dx" onerror="this.onerror=null; this.src='placeholder_dx.jpg'; this.alt='Immagine mancante'">`;
+    document.getElementById("right-img").innerHTML = `<img src="Dx/${dateStr}.jpg" alt="Immagine dx" onerror="this.onerror=null; this.src='Dx/placeholder_dx.jpg'; this.alt='Immagine mancante'">`;
 }
 </script>
 
 </body>
 </html>
+
 
 
 
