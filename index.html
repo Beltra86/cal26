@@ -56,6 +56,15 @@
             border-radius: 8px;
             text-align: center;
         }
+
+        .feedback-correct {
+            color: green;
+            font-weight: bold;
+        }
+        .feedback-error {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -158,6 +167,9 @@ function loadDay(dateStr) {
     document.getElementById("feedback").innerText = "";
     document.getElementById("answer").value = "";
 
+    // Rimuove le classi di colore dal feedback ogni volta che si carica un nuovo giorno
+    document.getElementById("feedback").classList.remove("feedback-correct", "feedback-error");
+    
     if (!data) {
         document.getElementById("question").innerText = "Nessuna domanda trovata.";
         return;
@@ -175,24 +187,35 @@ function loadDay(dateStr) {
 function checkAnswer() {
     const data = DATA[currentDate];
 
-    // Controlla se ci sono dati per il giorno corrente
     if (!data) {
         document.getElementById("feedback").innerText = "Errore: Nessuna domanda caricata.";
         return;
     }
 
     const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
-    // ********** Correzione 3: Sincronizzazione Nomi Variabili **********
     const correct = data.answer.toString().trim().toLowerCase();
+    
+    // Ottieni l'elemento feedback una sola volta
+    const feedbackElement = document.getElementById("feedback");
 
     if (userAnswer === correct) {
-        // ********** Correzione 3: Sincronizzazione Nomi Variabili **********
-        document.getElementById("feedback").innerText = data.phrase;
+        // CORRETTO (VERDE)
+        feedbackElement.innerText = data.phrase;
+        
+        // NUOVO: Aggiungi la classe verde e rimuovi quella rossa
+        feedbackElement.classList.add("feedback-correct");
+        feedbackElement.classList.remove("feedback-error");
+
         results[currentDate] = true;
         localStorage.setItem("results_domanda_giorno", JSON.stringify(results));
         showRightImage(currentDate);
     } else {
-        document.getElementById("feedback").innerText = "Risposta errata. Riprova!";
+        // ERRATO (ROSSO)
+        feedbackElement.innerText = "Risposta errata. Riprova!";
+        
+        // NUOVO: Aggiungi la classe rossa e rimuovi quella verde
+        feedbackElement.classList.add("feedback-error");
+        feedbackElement.classList.remove("feedback-correct");
     }
 }
 
@@ -204,5 +227,6 @@ function showRightImage(dateStr) {
 
 </body>
 </html>
+
 
 
