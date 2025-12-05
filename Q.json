@@ -7,7 +7,7 @@
     "disclaimer": "b"
     },
     
-    {
+    
     "2025-12-02": {
     "question": "?",
     "answer": "",
@@ -15,7 +15,7 @@
     "disclaimer": ""
     },
     
-    {
+    
     "2025-12-03": {
     "question": "?",
     "answer": "",
@@ -23,7 +23,7 @@
     "disclaimer": ""
     },
     
-    {
+    
     "2025-12-04": {
     "question": "?",
     "answer": "",
@@ -31,7 +31,7 @@
     "disclaimer": ""
     },
     
-    {
+    
     "2025-12-05": {
     "question": "Beo cio?",
     "answer": "k",
@@ -39,7 +39,7 @@
     "disclaimer": "Ocio"
     },
     
-    {
+    
     "2025-12-06": {
     "question": "?",
     "answer": "",
@@ -47,7 +47,7 @@
     "disclaimer": ""
     },
     
-    {
+   
     "2025-12-07": {
     "question": "?",
     "answer": "",
@@ -55,7 +55,7 @@
     "disclaimer": ""
     },
     
-    {
+    
     "2026-12-31": {
     "question": "Ti è piaciuto questo giochino?",
     "answer": "Sì",
@@ -63,6 +63,7 @@
     "disclaimer": "Siamo arrivati alla fine"
     }
 }
+
 
 
 
