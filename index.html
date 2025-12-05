@@ -74,7 +74,6 @@
 
 <div id="disclaimer-modal">
     <div id="disclaimer-box">
-        <h4>Disclaimer del Giorno</h4>
         <p id="disclaimer-text">Caricamento del disclaimer...</p>
         <button onclick="closeDisclaimer()">OK</button>
     </div>
@@ -173,7 +172,7 @@ function loadDay(dateStr) {
         checkButton.disabled = true;
         
         questionElement.innerText = "⚠️ Non puoi visualizzare le domande future.";
-        document.getElementById("disclaimer-text").innerText = "Torna su questa data quando sarà attuale!";
+        document.getElementById("disclaimer-text").innerText = "Ehi tu, furbetta! Non vale spiociare il futuro";
         showDisclaimer();
         
         document.getElementById("left-img").innerHTML = `<div style="text-align:center; padding: 20px;">📅 Data Futura</div>`;
@@ -255,6 +254,7 @@ function showRightImage(dateStr) {
 
 </body>
 </html>
+
 
 
 
