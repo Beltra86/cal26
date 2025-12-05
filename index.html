@@ -13,14 +13,15 @@
             align-items: center;
         }
         #container {
-            display: flex;
+            display: flex; /* Mantiene la flessibilità per allineare gli elementi fianco a fianco */
             width: 100%;
             max-width: 900px;
-            justify-content: space-between;
+            justify-content: space-between; /* Distribuisce lo spazio tra i tre elementi */
             align-items: flex-start;
+            margin-top: 20px;
         }
         #left-img, #right-img {
-            width: 45%;
+            width: 30%; /* Le due immagini occupano meno spazio (30% ciascuna) */
             min-height: 300px;
             border: 1px solid #ccc;
             display: flex;
@@ -28,14 +29,16 @@
             align-items: center;
             overflow: hidden;
         }
+        #center-qa {
+            width: 35%; /* La colonna centrale (domanda/risposta) occupa il 35% */
+            text-align: center;
+            padding: 0 10px; /* Piccolo padding per non attaccare i bordi */
+        }
         #left-img img, #right-img img {
             width: 100%;
         }
-        #qa-box {
-            width: 100%;
-            margin-top: 20px;
-            text-align: center;
-        }
+       
+        
         /* Assicuriamo che la modale sia SEMPRE visibile all'inizio */
         #disclaimer-modal {
             position: fixed;
@@ -81,15 +84,17 @@
 <input type="date" id="date-selector" onchange="changeDate()" />
 
 <div id="container">
+    
     <div id="left-img">Immagine sinistra</div>
+    
+    <div id="center-qa">
+        <h3 id="question">Caricamento...</h3>
+        <input type="text" id="answer" placeholder="Risposta" />
+        <button onclick="checkAnswer()">Invia</button>
+        <p id="feedback"></p>
+    </div>
+    
     <div id="right-img"></div>
-</div>
-
-<div id="qa-box">
-    <h3 id="question">Caricamento...</h3>
-    <input type="text" id="answer" placeholder="Risposta" />
-    <button onclick="checkAnswer()">Invia</button>
-    <p id="feedback"></p>
 </div>
 
 <script>
@@ -227,6 +232,7 @@ function showRightImage(dateStr) {
 
 </body>
 </html>
+
 
 
 
