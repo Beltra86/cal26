@@ -197,6 +197,16 @@
             }
         }
 
+
+       #disclaimer-modal.active {
+            pointer-events: auto;
+        }
+        
+        #disclaimer-modal:not(.active) {
+            pointer-events: none;
+            background: transparent;
+        }
+        
     </style>
 </head>
 
@@ -264,12 +274,17 @@ function init() {
 }
 
 function showDisclaimer() {
-    document.getElementById("disclaimer-modal").style.display = "flex";
+    const modal = document.getElementById("disclaimer-modal");
+    modal.style.display = "flex";
+    modal.classList.add("active");
 }
 
 function closeDisclaimer() {
-    document.getElementById("disclaimer-modal").style.display = "none";
+    const modal = document.getElementById("disclaimer-modal");
+    modal.style.display = "none";
+    modal.classList.remove("active");
 }
+    
 
 function changeDate() {
     currentDate = document.getElementById("date-selector").value;
@@ -374,3 +389,4 @@ function showRightImage(dateStr) {
 
 </body>
 </html>
+
