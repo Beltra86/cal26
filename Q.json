@@ -1,10 +1,10 @@
 
 {
-    "2025-12-01": {
-    "question": "Gino?",
-    "answer": "Sì",
-    "phrase": "Ciao",
-    "disclaimer": "b"
+    "2025-12-10": {
+    "question": "Quanti sono i componenti dei Primus?",
+    "answer": "3",
+    "phrase": "Io avrei 2 domande (semi cit)",
+    "disclaimer": "Pronta a partire?"
     },
     
     
@@ -63,6 +63,7 @@
     "disclaimer": "Siamo arrivati alla fine"
     }
 }
+
 
 
 
