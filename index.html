@@ -73,16 +73,29 @@
             max-width: 500px;
             border-radius: 8px;
             text-align: center;
-        }
-
-        .feedback-correct {
-            color: green;
-            font-weight: bold;
-        }
-        .feedback-error {
-            color: red;
-            font-weight: bold;
-        }
+        
+            .feedback-success-quote {
+                /* Stile del testo */
+                font-style: italic; /* Rende il testo in corsivo */
+                font-size: 1.1em;   /* Leggermente più grande del testo normale */
+                font-family: Georgia, serif; /* Font con le grazie, per un look più classico */
+                
+                /* Stile della citazione */
+                border-left: 5px solid green; /* Aggiunge una barra verde a sinistra tipica delle citazioni */
+                padding-left: 15px; /* Spaziatura tra la barra e il testo */
+                margin: 10px auto; /* Centra orizzontalmente il blocco */
+            }
+            
+            
+            /* Questa classe è stata rinominata in feedback-correct per chiarezza con la logica JS */
+            .feedback-correct {
+                color: green;
+                font-weight: bold;
+            }
+            .feedback-error {
+                color: red;
+                font-weight: bold;
+            }
     </style>
 </head>
 <body>
@@ -176,8 +189,9 @@ function loadDay(dateStr) {
     document.getElementById("right-img").innerHTML = "";
     answerInput.value = "";
     feedbackElement.innerText = "";
-    feedbackElement.classList.remove("feedback-correct", "feedback-error");
-    
+    // AGGIORNATO: rimuovi anche la classe di citazione
+    feedbackElement.classList.remove("feedback-correct", "feedback-error", "feedback-success-quote");
+       
     
     // 2. CONTROLLO DATA FUTURA
     // Se la data selezionata (in millisecondi) è maggiore di oggi (in millisecondi)
@@ -229,36 +243,46 @@ function loadDay(dateStr) {
 function checkAnswer() {
     const data = DATA[currentDate];
 
-    // Controlla se ci sono dati per il giorno corrente
-    if (!data) {
-        document.getElementById("feedback").innerText = "Errore: Nessuna domanda caricata.";
+    if (!data || results[currentDate] === true) {
         return;
     }
+    
+    let currentAttempts = attempts[currentDate] || 0;
+    currentAttempts++;
+    
+    attempts[currentDate] = currentAttempts;
+    localStorage.setItem("attempts_domanda_giorno", JSON.stringify(attempts));
+    
+    document.getElementById("current-attempts").innerText = currentAttempts;
 
     const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
     const correct = data.answer.toString().trim().toLowerCase();
 
-    // Ottieni l'elemento feedback una sola volta
     const feedbackElement = document.getElementById("feedback");
+    const answerInput = document.getElementById("answer");
+    const checkButton = document.querySelector("#center-qa button");
 
     if (userAnswer === correct) {
         // CORRETTO (VERDE)
-        feedbackElement.innerText = data.phrase;
+        feedbackElement.innerText = `${data.phrase} (Risolta in ${currentAttempts} tentativi!)`;
         
-        // Aggiungi la classe verde e rimuovi quella rossa
-        feedbackElement.classList.add("feedback-correct");
+        // NUOVO: Aggiungi la classe di citazione
+        feedbackElement.classList.add("feedback-correct", "feedback-success-quote");
         feedbackElement.classList.remove("feedback-error");
 
         results[currentDate] = true;
         localStorage.setItem("results_domanda_giorno", JSON.stringify(results));
         showRightImage(currentDate);
+        
+        // Disabilita i campi dopo la risposta corretta
+        answerInput.disabled = true;
+        checkButton.disabled = true;
     } else {
         // ERRATO (ROSSO)
-        feedbackElement.innerText = "Risposta errata, buuuu. Riprova!";
+        feedbackElement.innerText = `Risposta errata. Riprova! (Tentativo n. ${currentAttempts})`;
         
-        // Aggiungi la classe rossa e rimuovi quella verde
         feedbackElement.classList.add("feedback-error");
-        feedbackElement.classList.remove("feedback-correct");
+        feedbackElement.classList.remove("feedback-correct", "feedback-success-quote"); // Rimuovi la classe citazione
     }
 }
 
@@ -269,6 +293,7 @@ function showRightImage(dateStr) {
 
 </body>
 </html>
+
 
 
 
