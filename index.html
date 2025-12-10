@@ -3,404 +3,294 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Domanda del Giorno</title>
+    <title>E' quello in cima?</title>
     <style>
-        /* --- RESET E BASE --- */
-        * { box-sizing: border-box; }
-        html, body { height: 100%; margin: 0; padding: 0; }
+
+        html {
+        height: 100%;
+        }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+           font-family: Arial, sans-serif;
+            margin: 0; 
+            
+            /* CENTRAGGIO VERTICALE */
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            min-height: 100vh;
+            flex-direction: column; 
+            align-items: center;    
+            justify-content: center;  
+            min-height: 100vh;      
+            height: 100%; 
+        
+            /* I TUOI COLORI ORIGINALI */
+            background: linear-gradient(to bottom right, #8f00ff, #f5f5f5);
+            background-attachment: fixed;
         }
-
-        /* --- TITOLI E DATA --- */
-        h2 {
-            color: white;
-            margin-top: 20px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        #date-selector {
-            padding: 10px;
-            border-radius: 20px;
-            border: none;
-            font-size: 1rem;
-            margin-bottom: 20px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        /* --- CONTENITORE PRINCIPALE --- */
         #container {
-            display: flex;
-            width: 95%;
-            max-width: 1000px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            min-height: 400px; /* Altezza minima */
+            display: flex; 
+            width: 100%;
+            max-width: 900px;
+            justify-content: space-between; 
+            align-items: center;
+            margin-top: 20px;
         }
-
-        /* --- COLONNE (SX, CENTRO, DX) --- */
-        .column {
-            padding: 20px;
+        #left-img, #right-img {
+            width: 30%; 
+            min-height: 300px;
+            border: 1px solid #ccc;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-        }
-
-        #left-img, #right-img {
-            width: 30%;
-            background-color: #f0f0f0;
             overflow: hidden;
-            position: relative;
+            background-color: rgba(255,255,255,0.3); /* Leggero sfondo per vedere il box */
         }
-
-        #left-img img, #right-img img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-
         #center-qa {
-            width: 40%;
-            border-left: 1px solid #ddd;
-            border-right: 1px solid #ddd;
+            width: 35%; 
             text-align: center;
+            padding: 0 10px; 
         }
-
-        /* --- INPUT E BOTTONI --- */
-        #question {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            color: #2c3e50;
+        #left-img img, #right-img img {
+            width: 100%;
         }
-
-        #answer {
-            padding: 10px;
-            width: 80%;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            margin-bottom: 10px;
-            transition: border-color 0.3s;
-        }
-        #answer:focus {
-            border-color: #764ba2;
-            outline: none;
-        }
-        #answer:disabled {
-            background-color: #e9ecef;
-            cursor: not-allowed;
-        }
-
-        button.btn-primary {
-            background-color: #764ba2;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button.btn-primary:hover { background-color: #5a387e; }
-        button.btn-primary:disabled { background-color: #ccc; cursor: not-allowed; }
-
-        /* --- FEEDBACK VISIVO (IMPORTANTE: FUORI DA ALTRE CLASSI) --- */
-        #feedback {
-            margin-top: 15px;
-            font-weight: bold;
-            min-height: 1.5em;
-        }
-
-        .feedback-correct {
-            color: #27ae60; /* Verde */
-        }
-        
-        .feedback-success-quote {
-            color: #2c3e50;
-            font-style: italic;
-            border-left: 4px solid #27ae60;
-            background: #e8f8f5;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .feedback-error {
-            color: #c0392b; /* Rosso */
-        }
-
-        /* --- MODALE DISCLAIMER --- */
+       
+        /* MODALE */
         #disclaimer-modal {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            display: flex; /* Flex per centrare */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none; /* Nascosto di default, gestito da JS */
             justify-content: center;
             align-items: center;
-            z-index: 2000;
+            z-index: 1000; 
+        }
+        #disclaimer-box {
+            background: violet;
+            padding: 20px;
+            max-width: 500px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* CORREZIONE CSS: Queste classi devono stare FUORI da #disclaimer-box */
+        .feedback-success-quote {
+            font-style: italic; 
+            font-size: 1.1em;   
+            font-family: Georgia, serif; 
+            border-left: 5px solid green; 
+            padding-left: 15px; 
+            margin: 10px auto; 
+            background: rgba(255,255,255,0.5); /* Aggiunto sfondo per leggibilità */
         }
         
-        #disclaimer-box {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        .feedback-correct {
+            color: darkgreen; /* Verde più scuro per contrasto */
+            font-weight: bold;
         }
-        #disclaimer-box h3 { margin-top: 0; color: #764ba2; }
+        .feedback-error {
+            color: darkred; /* Rosso più scuro per contrasto */
+            font-weight: bold;
+        }
+        
+        /* Responsive base per mobile */
+        @media (max-width: 600px) {
+            #container { flex-direction: column; }
+            #left-img, #right-img, #center-qa { width: 90%; margin-bottom: 15px; }
+        }
 
-        /* --- RESPONSIVE MOBILE --- */
-        @media (max-width: 768px) {
-            #container {
-                flex-direction: column;
-                height: auto;
-            }
-            #left-img, #right-img, #center-qa {
-                width: 100%;
-                border: none;
-                padding: 15px;
-            }
-            #left-img, #right-img {
-                height: 200px; /* Altezza fissa per le immagini su mobile */
-            }
-            #center-qa {
-                order: 2; /* Mette la domanda al centro anche visivamente se necessario */
-            }
-        }
     </style>
 </head>
 <body>
 
-    <div id="disclaimer-modal">
-        <div id="disclaimer-box">
-            <h3>Messaggio del Giorno</h3>
-            <p id="disclaimer-text">Caricamento...</p>
-            <button class="btn-primary" onclick="closeDisclaimer()">Ho capito</button>
-        </div>
+<div id="disclaimer-modal">
+    <div id="disclaimer-box">
+        <p id="disclaimer-text">Caricamento del disclaimer...</p>
+        <button onclick="closeDisclaimer()" style="padding: 5px 15px; cursor: pointer;">OK</button>
     </div>
+</div>
 
-    <h2>Domanda del Giorno</h2>
-    <input type="date" id="date-selector" onchange="changeDate()" />
+<h2 style="color: white; text-shadow: 1px 1px 2px black;">Domanda del Giorno</h2>
+<input type="date" id="date-selector" onchange="changeDate()" style="padding: 5px;" />
 
-    <div id="container">
-        <div id="left-img" class="column">
-            <span>Caricamento Sx...</span>
-        </div>
-
-        <div id="center-qa" class="column">
-            <h3 id="question">Seleziona una data...</h3>
-            
-            <input type="text" id="answer" placeholder="La tua risposta..." autocomplete="off">
-            <button class="btn-primary" onclick="checkAnswer()" id="btn-submit">Invia</button>
-            
-            <div id="feedback"></div>
-            <p style="font-size: 0.8em; color: #777; margin-top: 15px;">
-                Tentativi: <span id="attempts-count">0</span>
-            </p>
-            
-            <button onclick="resetDayDebug()" style="margin-top: 20px; font-size: 0.7em; background: none; border: 1px dashed #999; cursor: pointer;">
-                🔄 Reset (Debug)
-            </button>
-        </div>
-
-        <div id="right-img" class="column">
-            </div>
+<div id="container">
+    
+    <div id="left-img">Immagine sinistra</div>
+    
+    <div id="center-qa">
+        <h3 id="question">Caricamento...</h3>
+        <input type="text" id="answer" placeholder="Risposta" style="padding: 5px; width: 80%;" />
+        <br><br>
+        <button onclick="checkAnswer()" style="cursor: pointer; padding: 5px 10px;">Invia</button>
+        
+        <p id="feedback"></p>
+        <p style="font-size: 0.8em; color: #333;">Tentativi: <span id="current-attempts">0</span></p>
     </div>
+    
+    <div id="right-img"></div>
+</div>
 
 <script>
-    // --- VARIABILI GLOBALI ---
-    let DATA = {};
-    let currentDate = "";
-    // Caricamento memorie dal browser (se non esistono, crea oggetti vuoti)
-    let results = JSON.parse(localStorage.getItem("results_domanda_giorno") || "{}");
-    let attempts = JSON.parse(localStorage.getItem("attempts_domanda_giorno") || "{}");
+// --- VARIABILI GLOBALI ---
+let DATA = {};
+let currentDate = "";
+let results = JSON.parse(localStorage.getItem("results_domanda_giorno") || "{}");
+// FIX: Inizializziamo correttamente attempts
+let attempts = JSON.parse(localStorage.getItem("attempts_domanda_giorno") || "{}");
 
-    // --- INIZIALIZZAZIONE ---
-    // Carica il file JSON
-    fetch("Q.json")
-        .then(response => {
-            if (!response.ok) throw new Error("File Q.json non trovato");
-            return response.json();
-        })
-        .then(json => {
-            DATA = json;
-            init(); // Avvia il gioco solo dopo aver caricato i dati
-        })
-        .catch(err => {
-            console.error(err);
-            document.getElementById("question").innerText = "Errore: File Q.json mancante.";
-            document.getElementById("disclaimer-modal").style.display = "none";
-        });
+// --- CARICAMENTO DATI ---
+fetch("Q.json")
+    .then(r => {
+        if (!r.ok) throw new Error("Errore nel caricamento di Q.json: " + r.statusText);
+        return r.json();
+    })
+    .then(json => {
+        DATA = json;
+        init();
+    })
+    .catch(err => {
+        console.error("Errore fatale:", err);
+        document.getElementById("question").innerText = "Errore: file Q.json non trovato.";
+    });
 
-    function init() {
-        // Imposta la data di oggi nel selettore
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, "0");
-        const dd = String(today.getDate()).padStart(2, "0");
-        currentDate = `${yyyy}-${mm}-${dd}`;
+function init() {
+    // Calcoliamo la data di oggi in formato YYYY-MM-DD locale
+    const today = new Date();
+    const yyyy = today.getFullYear(); 
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    currentDate = `${yyyy}-${mm}-${dd}`;
 
-        const dateInput = document.getElementById("date-selector");
-        dateInput.value = currentDate;
+    document.getElementById("date-selector").value = currentDate;
+    loadDay(currentDate);
+}
+
+function closeDisclaimer() {
+    document.getElementById("disclaimer-modal").style.display = "none";
+}
+
+function showDisclaimer() {
+    document.getElementById("disclaimer-modal").style.display = "flex";
+}
+
+function changeDate() {
+    currentDate = document.getElementById("date-selector").value;
+    loadDay(currentDate);
+}
+
+function loadDay(dateStr) {
+    // 1. OTTENIAMO LA DATA DI OGGI COME STRINGA PER CONFRONTO SICURO
+    const todayObj = new Date();
+    const todayStr = todayObj.getFullYear() + '-' + String(todayObj.getMonth() + 1).padStart(2, '0') + '-' + String(todayObj.getDate()).padStart(2, '0');
+    
+    // Riferimenti DOM
+    const answerInput = document.getElementById("answer");
+    const checkButton = document.querySelector("#center-qa button");
+    const feedbackElement = document.getElementById("feedback");
+    const questionElement = document.getElementById("question");
+    const attemptsDisplay = document.getElementById("current-attempts");
+    
+    // 2. RESET TOTALE INTERFACCIA (IMPORTANTE: Sblocca tutto prima di controllare)
+    document.getElementById("left-img").innerHTML = `Immagine sinistra`; 
+    document.getElementById("right-img").innerHTML = "";
+    answerInput.value = "";
+    answerInput.disabled = false; // <--- SBLOCCO FONDAMENTALE
+    checkButton.disabled = false; // <--- SBLOCCO FONDAMENTALE
+    feedbackElement.innerText = "";
+    feedbackElement.className = ""; // Rimuove classi verde/rosso
+    
+    // Mostra tentativi salvati o 0
+    attemptsDisplay.innerText = attempts[dateStr] || 0;
+       
+    // 3. CONTROLLO DATA FUTURA (Confronto stringhe: "2025-12-11" > "2025-12-10")
+    if (dateStr > todayStr) {
+        answerInput.disabled = true;
+        checkButton.disabled = true;
         
-        loadDay(currentDate);
-    }
-
-    // --- FUNZIONI INTERFACCIA ---
-    function closeDisclaimer() {
-        document.getElementById("disclaimer-modal").style.display = "none";
-    }
-
-    function changeDate() {
-        currentDate = document.getElementById("date-selector").value;
-        loadDay(currentDate);
-    }
-
-    // --- LOGICA PRINCIPALE ---
-    function loadDay(dateStr) {
-        const today = new Date();
-        // Creiamo date "pulite" (senza orario) per il confronto
-        const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        const selectedDate = new Date(dateStr);
-
-        // Riferimenti DOM
-        const qEl = document.getElementById("question");
-        const inputEl = document.getElementById("answer");
-        const btnEl = document.getElementById("btn-submit");
-        const feedEl = document.getElementById("feedback");
-        const leftImgEl = document.getElementById("left-img");
-        const rightImgEl = document.getElementById("right-img");
-        const attEl = document.getElementById("attempts-count");
-        const discText = document.getElementById("disclaimer-text");
-        const discModal = document.getElementById("disclaimer-modal");
-
-        // 1. RESET TOTALE UI (Fondamentale: riabilita tutto prima di controllare)
-        inputEl.value = "";
-        inputEl.disabled = false;
-        btnEl.disabled = false;
-        btnEl.style.display = "inline-block"; // Assicura che sia visibile
-        feedEl.innerHTML = "";
-        feedEl.className = "";
-        rightImgEl.innerHTML = ""; // Pulisce dx
-        attEl.innerText = attempts[dateStr] || 0;
-
-        // 2. CONTROLLO DATA FUTURA
-        // (Nota: selectedDate viene creato a mezzanotte UTC, comparalo con cautela. 
-        // Usiamo string comparison per semplicità se serve, ma getTime va bene qui)
-        if (selectedDate > todayOnly) {
-            qEl.innerText = "⛔ Non puoi giocare nel futuro!";
-            leftImgEl.innerHTML = "<span>?</span>";
-            inputEl.disabled = true;
-            btnEl.disabled = true;
-            discText.innerText = "Non correre troppo! Aspetta domani.";
-            discModal.style.display = "flex";
-            return;
-        }
-
-        // 3. RECUPERO DATI DAL JSON
-        const dayData = DATA[dateStr];
-
-        if (!dayData) {
-            qEl.innerText = "Nessuna domanda per questa data.";
-            leftImgEl.innerHTML = "<span>N/A</span>";
-            discModal.style.display = "none";
-            return;
-        }
-
-        // Mostra Immagine SX
-        leftImgEl.innerHTML = `<img src="Sx/${dateStr}.jpg" alt="Immagine Sinistra" onerror="this.parentNode.innerHTML='❌ Immagine mancante'">`;
+        questionElement.innerText = "⚠️ Non puoi visualizzare le domande future.";
+        document.getElementById("disclaimer-text").innerText = "Ehi tu, furbetta! Non sbirciare il futuro";
+        showDisclaimer();
         
-        // Mostra Domanda
-        qEl.innerText = dayData.question;
+        document.getElementById("left-img").innerHTML = `<div style="text-align:center; padding: 20px;">📅 Data Futura</div>`;
+        return; 
+    }
+    
+    // 4. CARICAMENTO DOMANDA
+    const data = DATA[dateStr];
+
+    // Immagine sinistra
+    document.getElementById("left-img").innerHTML = `<img src="Sx/${dateStr}.jpg" alt="Sx" onerror="this.parentNode.innerText='Foto mancante'">`;
+
+    if (!data) {
+        questionElement.innerText = "Nessuna domanda trovata per oggi.";
+        // Non mostriamo disclaimer se non c'è la domanda, o mostriamo un avviso generico
+        return;
+    }
+
+    // Carica Disclaimer e Domanda
+    document.getElementById("disclaimer-text").innerText = data.disclaimer || "Benvenuta!";
+    showDisclaimer();
+    
+    questionElement.innerText = data.question;
+
+    // 5. CONTROLLO SE GIA RISOLTA
+    if (results[dateStr] === true) {
+        showRightImage(dateStr);
+        feedbackElement.innerText = `${data.phrase} (Risolto!)`;
+        feedbackElement.className = "feedback-correct feedback-success-quote";
         
-        // Mostra Disclaimer
-        discText.innerText = dayData.disclaimer || "Buona fortuna!";
-        discModal.style.display = "flex";
-
-        // 4. CONTROLLO SE GIA RISOLTO
-        if (results[dateStr] === true) {
-            // Se già risolto, mostriamo lo stato "Vinto"
-            gameWonState(dayData);
-        }
+        // Solo ORA blocchiamo l'input perché è già risolta
+        answerInput.disabled = true;
+        checkButton.disabled = true;
     }
+}
 
-    function checkAnswer() {
-        const dayData = DATA[currentDate];
-        if (!dayData) return;
+function checkAnswer() {
+    const data = DATA[currentDate];
 
-        // Incrementa tentativi
-        let currAttempts = (attempts[currentDate] || 0) + 1;
-        attempts[currentDate] = currAttempts;
-        localStorage.setItem("attempts_domanda_giorno", JSON.stringify(attempts));
-        document.getElementById("attempts-count").innerText = currAttempts;
-
-        // Controlla risposta
-        const userAns = document.getElementById("answer").value.trim().toLowerCase();
-        const correctAns = dayData.answer.toString().trim().toLowerCase();
-        const feedEl = document.getElementById("feedback");
-
-        if (userAns === correctAns) {
-            // --- VITTORIA ---
-            results[currentDate] = true;
-            localStorage.setItem("results_domanda_giorno", JSON.stringify(results));
-            gameWonState(dayData);
-        } else {
-            // --- ERRORE ---
-            feedEl.innerText = "Risposta sbagliata, riprova!";
-            feedEl.className = "feedback-error";
-            
-            // Animazione scuotimento input (opzionale)
-            const inputEl = document.getElementById("answer");
-            inputEl.style.borderColor = "red";
-            setTimeout(() => inputEl.style.borderColor = "#ddd", 500);
-        }
+    // Se non ci sono dati o è già risolto, esci
+    if (!data || results[currentDate] === true) {
+        return;
     }
+    
+    // Incremento tentativi
+    let currentAttempts = attempts[currentDate] || 0;
+    currentAttempts++;
+    attempts[currentDate] = currentAttempts;
+    localStorage.setItem("attempts_domanda_giorno", JSON.stringify(attempts));
+    
+    document.getElementById("current-attempts").innerText = currentAttempts;
 
-    function gameWonState(data) {
-        const feedEl = document.getElementById("feedback");
-        const inputEl = document.getElementById("answer");
-        const btnEl = document.getElementById("btn-submit");
-        const rightImgEl = document.getElementById("right-img");
+    const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+    const correct = data.answer.toString().trim().toLowerCase();
 
-        // 1. Mostra immagine destra
-        rightImgEl.innerHTML = `<img src="Dx/${currentDate}.jpg" alt="Vittoria" onerror="this.parentNode.innerHTML='🏆'">`;
+    const feedbackElement = document.getElementById("feedback");
+    const answerInput = document.getElementById("answer");
+    const checkButton = document.querySelector("#center-qa button");
 
-        // 2. Feedback positivo
-        feedEl.innerHTML = `<div class="feedback-success-quote">${data.phrase}</div>`;
-        feedEl.className = ""; // Rimuove classi di errore
+    if (userAnswer === correct) {
+        // --- CORRETTO ---
+        feedbackElement.innerText = `${data.phrase} (Brava! ${currentAttempts} tentativi)`;
+        feedbackElement.className = "feedback-correct feedback-success-quote"; // Applica stile verde/citazione
+
+        results[currentDate] = true;
+        localStorage.setItem("results_domanda_giorno", JSON.stringify(results));
+        showRightImage(currentDate);
         
-        // 3. Disabilita Input (Standard per i giochi "Daily")
-        inputEl.value = data.answer; // Mostra la risposta corretta
-        inputEl.disabled = true;     // Blocca la scrittura
-        btnEl.disabled = true;       // Blocca il bottone
-        btnEl.style.display = "none"; // Nasconde il bottone (più pulito)
+        // Disabilita i campi DOPO la risposta corretta
+        answerInput.disabled = true;
+        checkButton.disabled = true;
+    } else {
+        // --- ERRATO ---
+        feedbackElement.innerText = `Risposta errata. Riprova!`;
+        feedbackElement.className = "feedback-error"; // Applica stile rosso
     }
+}
 
-    // Funzione di utilità per testare (cancella la memoria di OGGI)
-    function resetDayDebug() {
-        if(confirm("Vuoi cancellare i progressi di QUESTA data per riprovare?")) {
-            delete results[currentDate];
-            delete attempts[currentDate];
-            localStorage.setItem("results_domanda_giorno", JSON.stringify(results));
-            localStorage.setItem("attempts_domanda_giorno", JSON.stringify(attempts));
-            loadDay(currentDate); // Ricarica la pagina allo stato iniziale
-        }
-    }
-
+function showRightImage(dateStr) {
+    document.getElementById("right-img").innerHTML = `<img src="Dx/${dateStr}.jpg" alt="Dx" onerror="this.parentNode.innerText='Foto mancante'">`;
+}
 </script>
 
 </body>
