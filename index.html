@@ -3,58 +3,63 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>E' quello in cinma?</title>
+    <title>E' quello in cima?</title>
     <style>
-
         html {
-        height: 100%;
+            height: 100%;
         }
         
         body {
-           font-family: Arial, sans-serif;
-            margin: 0; /* Rimuovi il margine predefinito per usare l'intera altezza */
-            
-            /* NUOVE PROPRIETÀ PER IL CENTRAGGIO VERTICALE */
+            font-family: Arial, sans-serif;
+            margin: 0;
             display: flex;
-            flex-direction: column; /* Imposta l'asse principale su colonna */
-            align-items: center;    /* Centra orizzontalmente i contenuti */
-            justify-content: center;  /* Centra verticalmente i contenuti */
-            min-height: 100vh;      /* Forza il body ad occupare l'intera altezza della finestra */
-            height: 100%; /* Garantisce che body usi l'altezza di html */
-        
-           
-            /* Colori: Un azzurro molto chiaro (#e0e7ff) a un grigio chiarissimo (#f5f5f5) */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            height: 100%;
             background: linear-gradient(to bottom right, #8f00ff, #f5f5f5);
             background-attachment: fixed;
         }
+
         #container {
-            display: flex; /* Mantiene la flessibilità per allineare gli elementi fianco a fianco */
+            display: flex;
             width: 100%;
             max-width: 900px;
-            justify-content: space-between; /* Distribuisce lo spazio tra i tre elementi */
+            justify-content: space-between;
             align-items: center;
             margin-top: 20px;
+            gap: 10px; /* Spazio tra le colonne */
         }
+
         #left-img, #right-img {
-            width: 30%; /* Le due immagini occupano meno spazio (30% ciascuna) */
+            width: 30%;
             min-height: 300px;
             border: 1px solid #ccc;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.5); /* Leggero sfondo per vedere il box vuoto */
+            border-radius: 8px;
         }
+
         #center-qa {
-            width: 35%; /* La colonna centrale (domanda/risposta) occupa il 35% */
+            width: 35%;
             text-align: center;
-            padding: 0 10px; /* Piccolo padding per non attaccare i bordi */
+            padding: 0 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
         }
+
         #left-img img, #right-img img {
             width: 100%;
+            height: 100%;
+            object-fit: cover; /* Mantiene le proporzioni riempiendo il box */
         }
        
-        
-        /* Assicuriamo che la modale sia SEMPRE visibile all'inizio */
+        /* Modale */
         #disclaimer-modal {
             position: fixed;
             top: 0;
@@ -62,40 +67,57 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.7);
-            display: flex; /* La modale è visibile di default */
+            display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Assicuriamo che sia sopra ogni cosa */
+            z-index: 1000;
         }
+
         #disclaimer-box {
             background: violet;
             padding: 20px;
             max-width: 500px;
             border-radius: 8px;
             text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* --- CLASSI DI FEEDBACK (Spostate FUORI da #disclaimer-box per funzionare ovunque) --- */
+        .feedback-success-quote {
+            font-style: italic;
+            font-size: 1.1em;
+            font-family: Georgia, serif;
+            border-left: 5px solid green;
+            padding-left: 15px;
+            margin: 10px auto;
+            background-color: rgba(0, 128, 0, 0.1); /* Leggero sfondo verde */
+            padding: 10px;
+            border-radius: 4px;
+        }
         
-            .feedback-success-quote {
-                /* Stile del testo */
-                font-style: italic; /* Rende il testo in corsivo */
-                font-size: 1.1em;   /* Leggermente più grande del testo normale */
-                font-family: Georgia, serif; /* Font con le grazie, per un look più classico */
-                
-                /* Stile della citazione */
-                border-left: 5px solid green; /* Aggiunge una barra verde a sinistra tipica delle citazioni */
-                padding-left: 15px; /* Spaziatura tra la barra e il testo */
-                margin: 10px auto; /* Centra orizzontalmente il blocco */
+        .feedback-correct {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .feedback-error {
+            color: red;
+            font-weight: bold;
+        }
+
+        /* Responsive per cellulari */
+        @media (max-width: 768px) {
+            #container {
+                flex-direction: column;
             }
-            
-            
-            /* Questa classe è stata rinominata in feedback-correct per chiarezza con la logica JS */
-            .feedback-correct {
-                color: green;
-                font-weight: bold;
+            #left-img, #right-img, #center-qa {
+                width: 90%;
+                margin-bottom: 20px;
             }
-            .feedback-error {
-                color: red;
-                font-weight: bold;
+            #left-img, #right-img {
+                min-height: 200px; /* Meno alti su mobile */
             }
+        }
     </style>
 </head>
 <body>
@@ -103,12 +125,12 @@
 <div id="disclaimer-modal">
     <div id="disclaimer-box">
         <p id="disclaimer-text">Caricamento del disclaimer...</p>
-        <button onclick="closeDisclaimer()">OK</button>
+        <button onclick="closeDisclaimer()" style="padding: 10px 20px; cursor: pointer;">OK</button>
     </div>
 </div>
 
-<h2>Domanda del Giorno</h2>
-<input type="date" id="date-selector" onchange="changeDate()" />
+<h2 style="color: white; text-shadow: 1px 1px 2px black;">Domanda del Giorno</h2>
+<input type="date" id="date-selector" onchange="changeDate()" style="padding: 5px; border-radius: 5px; border: none;" />
 
 <div id="container">
     
@@ -116,9 +138,12 @@
     
     <div id="center-qa">
         <h3 id="question">Caricamento...</h3>
-        <input type="text" id="answer" placeholder="Risposta" />
-        <button onclick="checkAnswer()">Invia</button>
+        <input type="text" id="answer" placeholder="Scrivi la risposta..." style="padding: 8px; width: 80%; margin-bottom: 10px;" />
+        <br>
+        <button onclick="checkAnswer()" style="padding: 8px 15px; cursor: pointer;">Invia</button>
+        
         <p id="feedback"></p>
+        <p style="font-size: 0.8em; color: #555;">Tentativi effettuati: <span id="current-attempts">0</span></p>
     </div>
     
     <div id="right-img"></div>
@@ -127,7 +152,10 @@
 <script>
 let DATA = {};
 let currentDate = "";
+// Carica i risultati salvati
 let results = JSON.parse(localStorage.getItem("results_domanda_giorno") || "{}");
+// AGGIUNTO: Carica i tentativi salvati (Fix Critico)
+let attempts = JSON.parse(localStorage.getItem("attempts_domanda_giorno") || "{}");
 
 fetch("Q.json")
     .then(r => {
@@ -140,7 +168,8 @@ fetch("Q.json")
     })
     .catch(err => {
         console.error("Errore fatale:", err);
-        document.getElementById("disclaimer-text").innerText = "Errore nel caricamento dei dati. Controlla la console.";
+        document.getElementById("disclaimer-text").innerText = "Errore nel caricamento dei dati (Q.json). Controlla che il file esista.";
+        // Non mostriamo il disclaimer subito in caso di errore fetch per evitare loop se manca il file
     });
 
 
@@ -169,48 +198,42 @@ function changeDate() {
 }
 
 function loadDay(dateStr) {
-    // 1. PREPARAZIONE DELLE DATE PER IL CONFRONTO
     const today = new Date();
-    // Formato YYYY/MM/DD per creare un Date object affidabile solo con la data di oggi
     const todayStr = today.getFullYear() + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + String(today.getDate()).padStart(2, '0');
     
-    // Converte le stringhe in Date objects (solo la data, senza orario)
     const selectedDate = new Date(dateStr.replace(/-/g, '/'));
     const currentDateOnly = new Date(todayStr);
     
-    // Ottiene gli elementi per manipolazione
     const answerInput = document.getElementById("answer");
     const checkButton = document.querySelector("#center-qa button");
     const feedbackElement = document.getElementById("feedback");
     const questionElement = document.getElementById("question");
+    const attemptsSpan = document.getElementById("current-attempts");
     
-    // Eseguire il reset dei contenuti dinamici e dello stile
-    document.getElementById("left-img").innerHTML = `Immagine sinistra`; // Reset immagine Sx
+    // Reset interfaccia
+    document.getElementById("left-img").innerHTML = `Immagine sinistra`;
     document.getElementById("right-img").innerHTML = "";
     answerInput.value = "";
     feedbackElement.innerText = "";
-    // AGGIORNATO: rimuovi anche la classe di citazione
-    feedbackElement.classList.remove("feedback-correct", "feedback-error", "feedback-success-quote");
-       
+    feedbackElement.className = ""; // Rimuove tutte le classi
     
-    // 2. CONTROLLO DATA FUTURA
-    // Se la data selezionata (in millisecondi) è maggiore di oggi (in millisecondi)
+    // Mostra i tentativi attuali per quella data
+    attemptsSpan.innerText = attempts[dateStr] || 0;
+
+    // Controllo data futura
     if (selectedDate.getTime() > currentDateOnly.getTime()) {
-        // Disabilita interazione e mostra errore
         answerInput.disabled = true;
         checkButton.disabled = true;
         
         questionElement.innerText = "⚠️ Non puoi visualizzare le domande future.";
-        document.getElementById("disclaimer-text").innerText = "Ehi tu, furbetta! Non spiociare il futuro";
+        document.getElementById("disclaimer-text").innerText = "Ehi tu, furbetta! Non sbirciare il futuro";
         showDisclaimer();
         
         document.getElementById("left-img").innerHTML = `<div style="text-align:center; padding: 20px;">📅 Data Futura</div>`;
-        return; // Esce dalla funzione
+        return;
     }
     
-    // 3. CARICAMENTO NORMALE (Data odierna o Passata)
-    
-    // Riabilita interazione
+    // Riabilita input
     answerInput.disabled = false;
     checkButton.disabled = false;
     
@@ -222,37 +245,41 @@ function loadDay(dateStr) {
     if (!data) {
         questionElement.innerText = "Nessuna domanda trovata.";
         document.getElementById("disclaimer-text").innerText = "Nessuna domanda trovata per questa data.";
-        showDisclaimer();
+        // showDisclaimer(); // Opzionale: mostrare disclaimer anche se non c'è domanda
         return;
     }
 
-    // Carica Disclaimer e Domanda
-    document.getElementById("disclaimer-text").innerText = data.disclaimer || "Ti amo";
+    // Carica dati
+    document.getElementById("disclaimer-text").innerText = data.disclaimer || "Benvenuta!";
     showDisclaimer();
     
     questionElement.innerText = data.question;
 
-    // Controllo se è già stata risolta
+    // Se già risolto
     if (results[dateStr] === true) {
         showRightImage(dateStr);
-        feedbackElement.innerText = `Hai già risposto correttamente: "${data.answer}"`;
-        feedbackElement.classList.add("feedback-correct");
+        feedbackElement.innerText = `${data.phrase || "Brava!"}`; // Usa la frase di successo
+        feedbackElement.classList.add("feedback-correct", "feedback-success-quote");
+        answerInput.disabled = true;
+        checkButton.disabled = true;
     }
 }
 
 function checkAnswer() {
     const data = DATA[currentDate];
 
+    // Se non ci sono dati o è già risolto, esci
     if (!data || results[currentDate] === true) {
         return;
     }
     
+    // Logica tentativi
     let currentAttempts = attempts[currentDate] || 0;
     currentAttempts++;
-    
     attempts[currentDate] = currentAttempts;
     localStorage.setItem("attempts_domanda_giorno", JSON.stringify(attempts));
     
+    // Aggiorna il numero a schermo (ora l'elemento esiste!)
     document.getElementById("current-attempts").innerText = currentAttempts;
 
     const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
@@ -263,26 +290,20 @@ function checkAnswer() {
     const checkButton = document.querySelector("#center-qa button");
 
     if (userAnswer === correct) {
-        // CORRETTO (VERDE)
+        // CORRETTO
         feedbackElement.innerText = `${data.phrase} (Risolta in ${currentAttempts} tentativi!)`;
+        feedbackElement.className = "feedback-correct feedback-success-quote"; // Sovrascrive classi
         
-        // NUOVO: Aggiungi la classe di citazione
-        feedbackElement.classList.add("feedback-correct", "feedback-success-quote");
-        feedbackElement.classList.remove("feedback-error");
-
         results[currentDate] = true;
         localStorage.setItem("results_domanda_giorno", JSON.stringify(results));
         showRightImage(currentDate);
         
-        // Disabilita i campi dopo la risposta corretta
         answerInput.disabled = true;
         checkButton.disabled = true;
     } else {
-        // ERRATO (ROSSO)
-        feedbackElement.innerText = `Risposta errata. Riprova! (Tentativo n. ${currentAttempts})`;
-        
-        feedbackElement.classList.add("feedback-error");
-        feedbackElement.classList.remove("feedback-correct", "feedback-success-quote"); // Rimuovi la classe citazione
+        // ERRATO
+        feedbackElement.innerText = `Risposta errata. Riprova!`;
+        feedbackElement.className = "feedback-error"; // Sovrascrive classi
     }
 }
 
@@ -293,17 +314,3 @@ function showRightImage(dateStr) {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
