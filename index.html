@@ -1,392 +1,439 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Domanda del Giorno</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sito con Q.json - calendario</title>
 
-    <!-- FONT MODERNO -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Font moderni -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+  <style>
+    :root{
+      --violet:#6a4bdc;
+      --green:#2bb673;
+      --bg-start: #6a4bdc;
+      --bg-end: #2bb673;
+      --modal-bg: rgba(74, 20, 140, 0.9);
+      --card-bg: rgba(255,255,255,0.08);
+      --glass: rgba(255,255,255,0.06);
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
 
-        body {
-            margin: 0;
-            font-family: "Poppins", sans-serif;
+    /* Sfondo diagonale viola -> verde */
+    body{
+      background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+      min-height:100vh;
+      color:#fff;
+      display:flex;
+      flex-direction:column;
+    }
 
-            background: linear-gradient(135deg, #7b2ff7, #f5f5f5);
-            background-attachment: fixed;
+    header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:1rem 1.25rem;
+      gap:1rem;
+      background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      backdrop-filter: blur(6px);
+    }
 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+    .brand { font-weight:700; letter-spacing:0.2px; }
+    .controls { display:flex; gap:0.75rem; align-items:center; }
 
-            padding-bottom: 40px;
-        }
+    input[type="date"]{
+      padding:0.5rem 0.6rem;
+      border-radius:8px;
+      border:0;
+      background:rgba(255,255,255,0.06);
+      color: #fff;
+      font-size:0.95rem;
+    }
 
-        h2 {
-            color: white; 
-            margin-top: 30px;
-            font-weight: 600;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-        }
+    main.app{
+      flex:1;
+      display:flex;
+      padding:1.5rem;
+      gap:1rem;
+      align-items:flex-start;
+      box-sizing:border-box;
+    }
 
-        /* ----- CONTAINER CARD ----- */
-        #container {
-            display: flex;
-            justify-content: space-between;
-            align-items: stretch;
+    .left, .center, .right{
+      background:var(--card-bg);
+      border-radius:12px;
+      padding:1rem;
+      min-height:300px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    }
 
-            width: 95%;
-            max-width: 1000px;
+    .left, .right{
+      width:22%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-            margin-top: 30px;
-            padding: 20px;
+    .center{
+      flex:1;
+      margin:0 0.5rem;
+      display:flex;
+      flex-direction:column;
+      gap:1rem;
+      align-items:center;
+      justify-content:flex-start;
+    }
 
-            background: rgba(255,255,255,0.25);
-            backdrop-filter: blur(12px);
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    .img-frame{
+      width:100%;
+      max-width:300px;
+      height:320px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      border-radius:10px;
+      background:var(--glass);
+    }
 
-            gap: 20px;
+    .img-frame img{ width:100%; height:100%; object-fit:cover; display:block; }
 
-            animation: fadeIn 0.6s ease;
-        }
+    .question{
+      font-size:1.2rem;
+      font-weight:600;
+      text-align:center;
+      padding:0.75rem 1rem;
+      background: rgba(0,0,0,0.15);
+      border-radius:8px;
+      min-height:68px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    .answer-area{
+      width:100%;
+      max-width:680px;
+      display:flex;
+      gap:0.5rem;
+      align-items:center;
+      justify-content:center;
+    }
 
-        #left-img, #right-img {
-            flex: 1;
-            min-height: 280px;
+    .answer-area input[type="text"]{
+      flex:1;
+      padding:0.6rem 0.75rem;
+      border-radius:8px;
+      border:0;
+      font-size:1rem;
+      background:rgba(255,255,255,0.06);
+      color:#fff;
+    }
 
-            background: rgba(255,255,255,0.15);
-            border-radius: 14px;
+    .btn {
+      padding:0.6rem 0.9rem;
+      border-radius:8px;
+      border:0;
+      cursor:pointer;
+      font-weight:600;
+      background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+      color:#fff;
+    }
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+    .feedback{
+      min-height:28px;
+      text-align:center;
+      font-weight:600;
+    }
 
-            border: 1px solid rgba(255,255,255,0.3);
-        }
+    .phrase{
+      margin-top:0.25rem;
+      font-size:1rem;
+      padding:0.5rem 0.75rem;
+      border-radius:8px;
+      display:inline-block;
+    }
 
-        #left-img img, #right-img img {
-            width: 100%;
-            border-radius: 12px;
-        }
+    /* Modal disclaimer */
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(0,0,0,0.35);
+      z-index:1000;
+    }
+    .modal{
+      width:min(680px,92%);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border-radius:12px;
+      box-shadow: 0 12px 50px rgba(0,0,0,0.6);
+      overflow:hidden;
+    }
+    .modal .modal-header{
+      background: var(--modal-bg);
+      color:#fff;
+      padding:1rem;
+      font-weight:700;
+      font-size:1.05rem;
+    }
+    .modal .modal-body{
+      padding:1.25rem;
+      color:#fff;
+      background: linear-gradient(180deg, rgba(106,75,220,0.12), rgba(0,0,0,0.02));
+    }
+    .modal .modal-footer{
+      padding:0.75rem 1rem;
+      display:flex;
+      justify-content:flex-end;
+      gap:0.5rem;
+      background: rgba(0,0,0,0.03);
+    }
 
-        #center-qa {
-            flex: 1.2;
-            padding: 20px;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-
-            background: rgba(255,255,255,0.3);
-            border-radius: 16px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-        }
-
-        #question {
-            font-weight: 600;
-            font-size: 1.2em;
-            margin-bottom: 15px;
-        }
-
-        input[type="text"], input[type="date"] {
-            padding: 10px;
-            width: 80%;
-            border-radius: 12px;
-            border: 1px solid #ccc;
-            font-size: 1em;
-            margin-bottom: 15px;
-            outline: none;
-            transition: box-shadow 0.2s;
-        }
-
-        input[type="text"]:focus {
-            box-shadow: 0 0 8px rgba(123,47,247,0.5);
-        }
-
-        .btn {
-            padding: 10px 20px;
-            background: #7b2ff7;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-        .btn:hover {
-            background: #5c13cc;
-            transform: translateY(-1px);
-        }
-
-        /* FEEDBACK */
-        .feedback-success-quote {
-            background: rgba(255,255,255,0.65);
-            padding: 12px;
-            border-left: 5px solid #21c45a;
-            margin-top: 10px;
-            border-radius: 6px;
-            font-style: italic;
-        }
-
-        .feedback-correct {
-            color: #147a2e;
-            font-weight: 600;
-        }
-
-        .feedback-error {
-            color: #c62828;
-            font-weight: 600;
-        }
-
-        /* MODERN MODAL */
-        #disclaimer-modal {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.55);
-
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-
-            animation: fadeBg 0.3s ease;
-        }
-
-        @keyframes fadeBg {
-            from { background: rgba(0,0,0,0); }
-            to { background: rgba(0,0,0,0.55); }
-        }
-
-        #disclaimer-box {
-            background: white;
-            padding: 25px;
-            width: 90%;
-            max-width: 420px;
-            border-radius: 16px;
-
-            text-align: center;
-
-            animation: popIn 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.85); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* MOBILE */
-        @media (max-width: 750px) {
-            #container { 
-                flex-direction: column;
-            }
-        }
-
-
-       #disclaimer-modal.active {
-            pointer-events: auto;
-        }
-        
-        #disclaimer-modal:not(.active) {
-            pointer-events: none;
-            background: transparent;
-        }
-        
-    </style>
+    /* mobile */
+    @media (max-width:900px){
+      .left, .right{ display:none; }
+      .center{ margin:0; width:100%; }
+      main.app{ padding:1rem; }
+    }
+  </style>
 </head>
-
-
 <body>
-
-<!-- MODALE -->
-<div id="disclaimer-modal">
-    <div id="disclaimer-box">
-        <p id="disclaimer-text">Caricamento...</p>
-        <button onclick="closeDisclaimer()" class="btn">OK</button>
+  <header>
+    <div class="brand">Daily Q</div>
+    <div class="controls">
+      <label for="date">Seleziona data</label>
+      <input id="date" type="date" />
     </div>
-</div>
+  </header>
 
-<h2>Domanda del Giorno</h2>
-<input type="date" id="date-selector" onchange="changeDate()" />
+  <main class="app" aria-live="polite">
+    <aside class="left">
+      <div class="img-frame" id="left-frame">
+        <img id="left-img" src="placeholder.jpg" alt="Immagine sinistra" onerror="this.src='placeholder.jpg'">
+      </div>
+    </aside>
 
-<div id="container">
-    <div id="left-img">Immagine</div>
+    <section class="center">
+      <div class="question" id="question">Seleziona una data e accetta il disclaimer</div>
 
-    <div id="center-qa">
-        <h3 id="question">Caricamento...</h3>
-        <input type="text" id="answer" placeholder="Risposta..." />
+      <div class="answer-area" aria-hidden="false">
+        <input id="answer-input" type="text" placeholder="Inserisci la tua risposta..." autocomplete="off" />
+        <button id="submit-btn" class="btn">Invia</button>
+      </div>
 
-        <button class="btn" onclick="checkAnswer()">Invia</button>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+      <div id="phrase" class="phrase" style="display:none"></div>
+    </section>
 
-        <p id="feedback"></p>
-        <p style="font-size: 0.8em;">Tentativi: <span id="current-attempts">0</span></p>
+    <aside class="right">
+      <div class="img-frame" id="right-frame">
+        <img id="right-img" src="placeholder.jpg" alt="Immagine destra" onerror="this.src='placeholder.jpg'">
+      </div>
+    </aside>
+  </main>
+
+  <!-- Modal disclaimer -->
+  <div id="modal" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true">
+    <div class="modal" role="document">
+      <div class="modal-header" id="modal-title">Disclaimer</div>
+      <div class="modal-body" id="modal-body">
+        Caricamento disclaimer...
+      </div>
+      <div class="modal-footer">
+        <button id="modal-ok" class="btn">OK</button>
+      </div>
     </div>
+  </div>
 
-    <div id="right-img"></div>
-</div>
+  <script>
+    (function(){
+      const dateInput = document.getElementById('date');
+      const questionEl = document.getElementById('question');
+      const answerInput = document.getElementById('answer-input');
+      const submitBtn = document.getElementById('submit-btn');
+      const feedbackEl = document.getElementById('feedback');
+      const phraseEl = document.getElementById('phrase');
+      const leftImg = document.getElementById('left-img');
+      const rightImg = document.getElementById('right-img');
+      const modal = document.getElementById('modal');
+      const modalBody = document.getElementById('modal-body');
+      const modalOk = document.getElementById('modal-ok');
+      const modalTitle = document.getElementById('modal-title');
 
+      let Q = {};
+      let currentDateStr = null;
+      const placeholder = 'placeholder.jpg';
 
-<script>
-/* (JS identico al tuo, semplicemente pulito e senza errori) */
+      dateInput.min = '2025-12-20';
+      dateInput.max = '2026-12-31';
 
-let DATA = {};
-let currentDate = "";
-let results = JSON.parse(localStorage.getItem("results_domanda_giorno") || "{}");
-let attempts = JSON.parse(localStorage.getItem("attempts_domanda_giorno") || "{}");
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth()+1).padStart(2,'0');
+      const dd = String(today.getDate()).padStart(2,'0');
+      const todayStr = `${yyyy}-${mm}-${dd}`;
+      dateInput.value = (todayStr >= dateInput.min && todayStr <= dateInput.max) ? todayStr : dateInput.min;
 
-fetch("Q.json")
-    .then(r => {
-        if (!r.ok) throw new Error("Errore caricamento Q.json");
-        return r.json();
-    })
-    .then(json => {
-        DATA = json;
-        init();
-    })
-    .catch(err => {
-        document.getElementById("question").innerText = "Errore: file Q.json non trovato.";
-    });
+      fetch('Q.json').then(r => r.json()).then(json => {
+        Q = json || {};
+        openDisclaimerForSelectedDate();
+      }).catch(() => {
+        Q = {};
+        modalBody.textContent = 'Disclaimer non disponibile (Q.json non trovato).';
+        modalTitle.textContent = 'Disclaimer';
+        showModal();
+      });
 
-function init() {
-    const t = new Date();
-    const yyyy = t.getFullYear();
-    const mm = String(t.getMonth() + 1).padStart(2, "0");
-    const dd = String(t.getDate()).padStart(2, "0");
+      function isFutureDate(v){
+        const sel = new Date(v + 'T00:00:00');
+        const now = new Date();
+        const todayOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        return sel > todayOnly;
+      }
 
-    currentDate = `${yyyy}-${mm}-${dd}`;
-    document.getElementById("date-selector").value = currentDate;
-    loadDay(currentDate);
-}
+      function showModal(){
+        modal.style.display = 'flex';
+        answerInput.disabled = true;
+        submitBtn.disabled = true;
+      }
 
-function showDisclaimer() {
-    const modal = document.getElementById("disclaimer-modal");
-    modal.style.display = "flex";
-    modal.classList.add("active");
-}
+      function hideModal(){
+        modal.style.display = 'none';
+        answerInput.disabled = false;
+        submitBtn.disabled = false;
+        answerInput.focus();
+      }
 
-function closeDisclaimer() {
-    const modal = document.getElementById("disclaimer-modal");
-    modal.style.display = "none";
-    modal.classList.remove("active");
-}
-    
+      function openDisclaimerForSelectedDate(){
+        feedbackEl.textContent = '';
+        phraseEl.style.display = 'none';
+        answerInput.value = '';
 
-function changeDate() {
-    currentDate = document.getElementById("date-selector").value;
-    loadDay(currentDate);
-}
+        const v = dateInput.value;
+        currentDateStr = v;
 
-function loadDay(dateStr) {
-    const today = new Date();
-    const todayStr = today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,'0')+"-"+String(today.getDate()).padStart(2,'0');
+        if (isFutureDate(v)) {
+          modalTitle.textContent = 'Hey...';
+          modalBody.textContent = 'Non spiociare il futuro!!!';
+          setImagesVisible(false);
+          questionEl.textContent = 'Data futura: nessuna domanda mostrata';
+          showModal();
+          return;
+        }
 
-    const answer = document.getElementById("answer");
-    const btn = document.querySelector("#center-qa button");
-    const feedback = document.getElementById("feedback");
+        const entry = Q[v];
+        modalTitle.textContent = 'Disclaimer';
+        modalBody.textContent = entry && entry.disclaimer ? entry.disclaimer : 'Attenzione: disclaimer non trovato per questa data.';
+        showModal();
+      }
 
-    answer.value = "";
-    answer.disabled = false;
-    btn.disabled = false;
+      function setImagesVisible(visible){
+        const leftFrame = document.getElementById('left-frame');
+        const rightFrame = document.getElementById('right-frame');
+        leftFrame.style.visibility = visible ? 'visible' : 'hidden';
+        rightFrame.style.visibility = visible ? 'visible' : 'hidden';
+        leftImg.style.visibility = visible ? 'visible' : 'hidden';
+        rightImg.style.visibility = visible ? 'visible' : 'hidden';
+      }
 
-    feedback.innerText = "";
-    feedback.className = "";
+      function loadContentForDate(v){
+        if (isFutureDate(v)) {
+          setImagesVisible(false);
+          questionEl.textContent = 'Data futura: nessuna domanda mostrata';
+          feedbackEl.textContent = '';
+          phraseEl.style.display = 'none';
+          return;
+        }
 
-    document.getElementById("current-attempts").innerText = attempts[dateStr] || 0;
+        const entry = Q[v];
 
-    if (dateStr > todayStr) {
-        document.getElementById("question").innerText = "⚠️ Domanda futura non disponibile";
-        document.getElementById("left-img").innerHTML = "📅 Data futura";
+        if (!entry) {
+          questionEl.textContent = 'Nessuna domanda disponibile per questa data.';
+          setImagesVisible(false);
+          feedbackEl.textContent = '';
+          phraseEl.style.display = 'none';
+          return;
+        }
 
-        answer.disabled = true;
-        btn.disabled = true;
+        questionEl.textContent = entry.answer || '---';
 
-        document.getElementById("disclaimer-text").innerText =
-            "Ehi... niente spoiler sul futuro!";
-        showDisclaimer();
-        return;
-    }
+        leftImg.src = `Sx/${v}.jpg`;
+        leftImg.onerror = function(){ this.src = placeholder; };
 
-    const data = DATA[dateStr];
+        rightImg.src = `Dx/${v}.jpg`;
+        rightImg.onerror = function(){ this.src = placeholder; };
 
-    document.getElementById("left-img").innerHTML =
-        `<img src="Sx/${dateStr}.jpg" onerror="this.parentNode.innerText='Foto mancante'">`;
+        setImagesVisible(true);
+        document.querySelector('.right').style.visibility = 'hidden';
 
-    if (!data) {
-        document.getElementById("question").innerText = "Nessuna domanda trovata.";
-        return;
-    }
+        feedbackEl.textContent = '';
+        phraseEl.style.display = 'none';
+      }
 
-    document.getElementById("disclaimer-text").innerText = data.disclaimer || "Benvenuta!";
-    showDisclaimer();
+      dateInput.addEventListener('change', openDisclaimerForSelectedDate);
 
-    document.getElementById("question").innerText = data.question;
+      modalOk.addEventListener('click', () => {
+        const v = dateInput.value;
+        hideModal();
+        if (isFutureDate(v)) {
+          setImagesVisible(false);
+          document.querySelector('.right').style.visibility = 'hidden';
+          questionEl.textContent = 'Data futura: nessuna domanda mostrata';
+          return;
+        }
+        loadContentForDate(v);
+      });
 
-    if (results[dateStr] === true) {
-        showRightImage(dateStr);
-        feedback.innerText = data.phrase + " (Risolto)";
-        feedback.className = "feedback-success-quote feedback-correct";
+      submitBtn.addEventListener('click', checkAnswer);
+      answerInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') checkAnswer(); });
 
-        answer.disabled = true;
-        btn.disabled = true;
-    }
-}
+      function checkAnswer(){
+        const v = dateInput.value;
 
-function checkAnswer() {
-    const data = DATA[currentDate];
-    if (!data || results[currentDate]) return;
+        if (isFutureDate(v)) {
+          feedbackEl.innerHTML = '<span style="color:#ff3333">Ops... Risposta sbagliata!!!</span>';
+          phraseEl.style.display = 'none';
+          return;
+        }
 
-    let at = attempts[currentDate] || 0;
-    at++;
-    attempts[currentDate] = at;
-    localStorage.setItem("attempts_domanda_giorno", JSON.stringify(attempts));
+        const entry = Q[v];
+        if (!entry) {
+          feedbackEl.innerHTML = '<span style="color:#ff3333">Ops... Risposta sbagliata!!!</span>';
+          phraseEl.style.display = 'none';
+          return;
+        }
 
-    document.getElementById("current-attempts").innerText = at;
+        const userAns = (answerInput.value || '').trim();
+        const correctAns = (entry.answer || '').trim();
 
-    const user = document.getElementById("answer").value.trim().toLowerCase();
-    const correct = data.answer.toString().trim().toLowerCase();
+        const ok = userAns.toLowerCase() === correctAns.toLowerCase();
 
-    const feedback = document.getElementById("feedback");
-    const answer = document.getElementById("answer");
-    const btn = document.querySelector("#center-qa button");
-
-    if (user === correct) {
-        feedback.innerText = `${data.phrase} (Brava! ${at} tentativi)`;
-        feedback.className = "feedback-success-quote feedback-correct";
-
-        results[currentDate] = true;
-        localStorage.setItem("results_domanda_giorno", JSON.stringify(results));
-
-        showRightImage(currentDate);
-
-        answer.disabled = true;
-        btn.disabled = true;
-    } else {
-        feedback.innerText = "❌ Risposta errata. Riprova!";
-        feedback.className = "feedback-error";
-    }
-}
-
-function showRightImage(dateStr) {
-    document.getElementById("right-img").innerHTML =
-        `<img src="Dx/${dateStr}.jpg" onerror="this.parentNode.innerText='Foto mancante'">`;
-}
-</script>
-
+        if (ok){
+          feedbackEl.textContent = '';
+          phraseEl.textContent = entry.phrase || '';
+          phraseEl.style.display = 'inline-block';
+          phraseEl.style.color = '#0a0';
+          phraseEl.style.background = 'rgba(255,255,255,0.06)';
+          document.querySelector('.right').style.visibility = 'visible';
+          setImagesVisible(true);
+        } else {
+          feedbackEl.innerHTML = '<span style="color:#ff3333">Ops... Risposta sbagliata!!!</span>';
+          phraseEl.textContent = '';
+          phraseEl.style.display = 'none';
+          document.querySelector('.right').style.visibility = 'hidden';
+        }
+      }
+    })();
+  </script>
 </body>
 </html>
-
