@@ -56,13 +56,14 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 .phrase{margin-top:6px;padding:8px 10px;border-radius:8px;display:inline-block;font-size: 18px;font-style: italic;font-weight:700}
 
 /* modal */
-/* sfondo grigio? Boh, proviamo a metterlo rosso */
+/* è lo sfondo fuori dal disclaimer quando c'è il disclaimer */
 .modal-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,0,0,0.45);z-index:9999}
 .modal{width:min(720px,94%);border-radius:12px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,0.6)}
 .modal .modal-header{background:var(--modal-bg);color:#fff;padding:14px 16px;font-weight:700}
 /* rendiamo più opaco lo sfondo anche della parte sotto */
 .modal .modal-body{padding:18px;background:linear-gradient(180deg, rgba(106,75,220,0.95), rgba(0,0,0,0.95));color:#fff}
-.modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:rgba(0,0,0,0.03)}
+/* mettiamo il gradiente anche qui */
+.modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:linear-gradient(180deg, rgba(0,0,0,0.95), rgba(106,75,220,0.95))}
 @media (max-width:900px){.left,.right{display:none}.center{width:100%}}
 </style>
 </head>
@@ -328,6 +329,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
