@@ -9,10 +9,11 @@
 :root{
   --violet:#6a4bdc;
   --green:#2bb673;
-/* qui sotto era 74,20,140,0.95 ed è la parte superiore del disclaimer, quella del titolo */
-  --modal-bg: rgba(0,0,255,0.95);
-/* la variabile qui sotto definisce il colore dei riquadri delle immagini e della parte centrale*/
-  --card-bg: rgba(0,255,255,0.6);
+  
+/* SFONDO DEL TITOLO DEL DISCLAIMER */
+  --modal-bg: rgba(0,0,0,0.95);
+/* SFONDO DEI RIQUADRI IMMAGINI E CENTRALE*/
+  --card-bg: rgba(0,0,0,0.95);
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:"Inter",system-ui,Segoe UI,Roboto,Arial;color:#fff}
@@ -22,13 +23,13 @@ body{
 }
 header{
   padding:12px 18px;display:flex;align-items:center;justify-content:space-between;
-/* qui sotto è il riquadro in alto, dove c'è il titolo e il selettore della data */
-  background: rgba(0,255,0,0.15);backdrop-filter: blur(6px);
+/* SFONDO DEL RIQUADRO IN ALTO DOVE C'E' IL TITOLO E LA DATA */
+  background: rgba(0,0,0,0.95);backdrop-filter: blur(6px);
 }
 .brand{font-weight:700}
 .controls{display:flex;gap:12px;align-items:center}
-/* Qui sotto è il riquadro della data */ 
-input[type="date"]{padding:8px 10px;border-radius:8px;border:0;background:rgba(255,0,0,0.95);color:#fff}
+/* RIQUADRO DELLA DATA */ 
+input[type="date"]{padding:8px 10px;border-radius:8px;border:0;background:rgba(255,0,0,0.95);color:#FFD700}
 
 /* layout */
 main.app{flex:1;display:flex;gap:16px;padding:18px}
@@ -42,14 +43,16 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 .img-frame{width:100%;max-width:320px;height:320px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center}
 .img-frame img{width:100%;height:100%;object-fit:cover;display:block}
 
-/* a qui sotto era 0.12, è lo sfondo della casella della domanda */
-.question{font-size:1.15rem;font-weight:600;padding:12px;border-radius:8px;background:rgba(0,0,0,0.55);min-height:72px;display:flex;align-items:center;justify-content:center;text-align:center}
+/* RIQUADRO DELLA DOMANDA */
+.question{font-size:1.15rem;font-weight:600;padding:12px;border-radius:8px;background:rgba(0,0,0,0.95);min-height:72px;display:flex;align-items:center;justify-content:center;text-align:center}
 
 .answer-area{width:100%;max-width:720px;display:flex;gap:8px;align-items:center}
-/* color:#fff qui sotto è il colore della risposta digitata  */  
-.answer-area input[type="text"]{flex:1;padding:10px;border-radius:8px;border:0;background:rgba(255,255,255,0.05);color:#ff18ff}
-/* color:#fff è il colore del testo sul pulsante  */  
-.btn{padding:10px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600;background:rgba(255,0,255,0.95);color:#18ffff}
+  
+/* RIQUADRO DELLA RISPOSTA  */  
+.answer-area input[type="text"]{flex:1;padding:10px;border-radius:8px;border:0;background:rgba(0,0,0,0.95);color:#FFD700}
+  
+/* PULSANTE  */  
+.btn{padding:10px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600;background:rgba(255,0,255,0.95);color:#FFD700}
 
 .feedback{min-height:28px;text-align:center;font-weight:700}
 /* Aggiunto font-weight:700 alla cit di risposta corretta */  
@@ -57,13 +60,13 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 
 /* modal */
 /* è lo sfondo fuori dal disclaimer quando c'è il disclaimer */
-.modal-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,0,0,0.45);z-index:9999}
+.modal-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.15);z-index:9999}
 .modal{width:min(720px,94%);border-radius:12px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,0.6)}
 .modal .modal-header{background:var(--modal-bg);color:#fff;padding:14px 16px;font-weight:700}
 /* rendiamo più opaco lo sfondo anche della parte sotto */
-.modal .modal-body{padding:18px;background:linear-gradient(180deg, rgba(106,75,220,0.95), rgba(0,0,0,0.95));color:#fff}
+.modal .modal-body{padding:18px;background:linear-gradient(180deg, rgba(255,215,0,0.95), rgba(0,0,0,0.95));color:#fff}
 /* mettiamo il gradiente anche qui */
-.modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:linear-gradient(180deg, rgba(0,0,0,0.95), rgba(106,75,220,0.95))}
+.modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:linear-gradient(180deg, rgba(0,0,0,0.95), rgba(255,215,0,0.95))}
   
 @media (max-width:900px){.left,.right{display:none}.center{width:100%}}
 </style>
@@ -331,6 +334,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
