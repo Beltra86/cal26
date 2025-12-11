@@ -60,16 +60,16 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 .phrase{margin-top:6px;padding:8px 10px;border-radius:8px;display:inline-block;font-size: 18px;font-style: italic;font-weight:700}
 
 /* modal */
-/* è lo sfondo fuori dal disclaimer quando c'è il disclaimer */
-.modal-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9999;background:rgba(0,0,0,0.95)}
+/* SFONODO A TUTTO SCHERMO QUANDO C'E' IL DISCLAIMER */
+.modal-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9999;background:rgba(0,0,0,1)}
   
 .modal{width:min(720px,94%);border-radius:12px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,0.6)}
 /* PARTE ALTA DEL DISCLAIMER */  
-.modal .modal-header{background:rgba(255,215,0,0.35);padding:14px 16px;font-weight:700;text-align:center;color:#000}
+.modal .modal-header{background:rgba(255,215,0,0.5);padding:14px 16px;font-weight:700;text-align:center;color:#000}
 /* PARTE CENTRALE DEL DISCLAIMER */
-.modal .modal-body{padding:18px;background:rgba(255,215,0,0.35);color:#000}
+.modal .modal-body{padding:18px;background:rgba(255,215,0,0.5);color:#000}
 /* PARTE INFERIORE DEL DISCLAIMER */
-.modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:rgba(255,215,0,0.35)}
+.modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:rgba(255,215,0,0.5)}
   
 @media (max-width:900px){.left,.right{display:none}.center{width:100%}}
 </style>
@@ -337,6 +337,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
