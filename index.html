@@ -164,7 +164,10 @@ function loadImages(date) {
 function loadQuestion(date) {
     resetContent();
 
-    const today = new Date().toISOString().split("T")[0];
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+               .toISOString()
+               .split("T")[0];
 
     // controllo data futura
     if (date > today) {
@@ -225,3 +228,4 @@ window.onload = async () => {
 
 </body>
 </html>
+
