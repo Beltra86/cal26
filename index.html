@@ -1,439 +1,227 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sito con Q.json - calendario</title>
-
-  <!-- Font moderni -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --violet:#6a4bdc;
-      --green:#2bb673;
-      --bg-start: #6a4bdc;
-      --bg-end: #2bb673;
-      --modal-bg: rgba(74, 20, 140, 0.9);
-      --card-bg: rgba(255,255,255,0.08);
-      --glass: rgba(255,255,255,0.06);
-    }
-    html,body{
-      height:100%;
-      margin:0;
-      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+<meta charset="UTF-8">
+<title>Calendario Q</title>
+<style>
+    body {
+        margin: 0;
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: linear-gradient(135deg, #6a0dad, #00aa66);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
     }
 
-    /* Sfondo diagonale viola -> verde */
-    body{
-      background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
-      min-height:100vh;
-      color:#fff;
-      display:flex;
-      flex-direction:column;
+    /* MENU DATA */
+    #topbar {
+        padding: 15px;
+        background: rgba(255,255,255,0.2);
+        display: flex;
+        justify-content: center;
+        backdrop-filter: blur(4px);
     }
 
-    header {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:1rem 1.25rem;
-      gap:1rem;
-      background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      backdrop-filter: blur(6px);
+    #container {
+        display: flex;
+        flex: 1;
+        padding: 20px;
+        gap: 20px;
     }
 
-    .brand { font-weight:700; letter-spacing:0.2px; }
-    .controls { display:flex; gap:0.75rem; align-items:center; }
-
-    input[type="date"]{
-      padding:0.5rem 0.6rem;
-      border-radius:8px;
-      border:0;
-      background:rgba(255,255,255,0.06);
-      color: #fff;
-      font-size:0.95rem;
+    .side, .right {
+        width: 30%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
     }
 
-    main.app{
-      flex:1;
-      display:flex;
-      padding:1.5rem;
-      gap:1rem;
-      align-items:flex-start;
-      box-sizing:border-box;
+    .side img, .right img {
+        max-width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.4);
     }
 
-    .left, .center, .right{
-      background:var(--card-bg);
-      border-radius:12px;
-      padding:1rem;
-      min-height:300px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    #main {
+        width: 40%;
+        text-align: center;
+        color: white;
     }
 
-    .left, .right{
-      width:22%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    #phrase {
+        font-weight: bold;
+        margin-top: 15px;
     }
 
-    .center{
-      flex:1;
-      margin:0 0.5rem;
-      display:flex;
-      flex-direction:column;
-      gap:1rem;
-      align-items:center;
-      justify-content:flex-start;
+    /* POPUP DISCLAIMER */
+    #popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    .img-frame{
-      width:100%;
-      max-width:300px;
-      height:320px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      border-radius:10px;
-      background:var(--glass);
+    #popupContent {
+        background: purple;
+        color: white;
+        padding: 30px;
+        width: 60%;
+        border-radius: 15px;
+        font-size: 20px;
+        text-align: center;
+        box-shadow: 0 0 20px black;
     }
 
-    .img-frame img{ width:100%; height:100%; object-fit:cover; display:block; }
-
-    .question{
-      font-size:1.2rem;
-      font-weight:600;
-      text-align:center;
-      padding:0.75rem 1rem;
-      background: rgba(0,0,0,0.15);
-      border-radius:8px;
-      min-height:68px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    #popupContent button {
+        margin-top: 25px;
+        padding: 12px 25px;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
     }
-
-    .answer-area{
-      width:100%;
-      max-width:680px;
-      display:flex;
-      gap:0.5rem;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .answer-area input[type="text"]{
-      flex:1;
-      padding:0.6rem 0.75rem;
-      border-radius:8px;
-      border:0;
-      font-size:1rem;
-      background:rgba(255,255,255,0.06);
-      color:#fff;
-    }
-
-    .btn {
-      padding:0.6rem 0.9rem;
-      border-radius:8px;
-      border:0;
-      cursor:pointer;
-      font-weight:600;
-      background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
-      color:#fff;
-    }
-
-    .feedback{
-      min-height:28px;
-      text-align:center;
-      font-weight:600;
-    }
-
-    .phrase{
-      margin-top:0.25rem;
-      font-size:1rem;
-      padding:0.5rem 0.75rem;
-      border-radius:8px;
-      display:inline-block;
-    }
-
-    /* Modal disclaimer */
-    .modal-backdrop{
-      position:fixed;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(0,0,0,0.35);
-      z-index:1000;
-    }
-    .modal{
-      width:min(680px,92%);
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-      border-radius:12px;
-      box-shadow: 0 12px 50px rgba(0,0,0,0.6);
-      overflow:hidden;
-    }
-    .modal .modal-header{
-      background: var(--modal-bg);
-      color:#fff;
-      padding:1rem;
-      font-weight:700;
-      font-size:1.05rem;
-    }
-    .modal .modal-body{
-      padding:1.25rem;
-      color:#fff;
-      background: linear-gradient(180deg, rgba(106,75,220,0.12), rgba(0,0,0,0.02));
-    }
-    .modal .modal-footer{
-      padding:0.75rem 1rem;
-      display:flex;
-      justify-content:flex-end;
-      gap:0.5rem;
-      background: rgba(0,0,0,0.03);
-    }
-
-    /* mobile */
-    @media (max-width:900px){
-      .left, .right{ display:none; }
-      .center{ margin:0; width:100%; }
-      main.app{ padding:1rem; }
-    }
-  </style>
+</style>
 </head>
 <body>
-  <header>
-    <div class="brand">Daily Q</div>
-    <div class="controls">
-      <label for="date">Seleziona data</label>
-      <input id="date" type="date" />
+
+<div id="popup" style="display:flex;">
+    <div id="popupContent">
+        <div id="disclaimerText">Caricamento...</div>
+        <button onclick="closePopup()">OK</button>
     </div>
-  </header>
+</div>
 
-  <main class="app" aria-live="polite">
-    <aside class="left">
-      <div class="img-frame" id="left-frame">
-        <img id="left-img" src="placeholder.jpg" alt="Immagine sinistra" onerror="this.src='placeholder.jpg'">
-      </div>
-    </aside>
+<div id="topbar">
+    <input type="date" id="datePicker" min="2025-12-11" max="2026-12-31">
+</div>
 
-    <section class="center">
-      <div class="question" id="question">Seleziona una data e accetta il disclaimer</div>
+<div id="container">
+    <div class="side"><img id="leftImg" src=""></div>
 
-      <div class="answer-area" aria-hidden="false">
-        <input id="answer-input" type="text" placeholder="Inserisci la tua risposta..." autocomplete="off" />
-        <button id="submit-btn" class="btn">Invia</button>
-      </div>
+    <div id="main">
+        <h2 id="question"></h2>
 
-      <div class="feedback" id="feedback" aria-live="polite"></div>
-      <div id="phrase" class="phrase" style="display:none"></div>
-    </section>
+        <input type="text" id="answerInput" placeholder="Inserisci la risposta">
+        <button onclick="checkAnswer()">Invia</button>
 
-    <aside class="right">
-      <div class="img-frame" id="right-frame">
-        <img id="right-img" src="placeholder.jpg" alt="Immagine destra" onerror="this.src='placeholder.jpg'">
-      </div>
-    </aside>
-  </main>
-
-  <!-- Modal disclaimer -->
-  <div id="modal" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true">
-    <div class="modal" role="document">
-      <div class="modal-header" id="modal-title">Disclaimer</div>
-      <div class="modal-body" id="modal-body">
-        Caricamento disclaimer...
-      </div>
-      <div class="modal-footer">
-        <button id="modal-ok" class="btn">OK</button>
-      </div>
+        <div id="feedback"></div>
+        <div id="phrase"></div>
     </div>
-  </div>
 
-  <script>
-    (function(){
-      const dateInput = document.getElementById('date');
-      const questionEl = document.getElementById('question');
-      const answerInput = document.getElementById('answer-input');
-      const submitBtn = document.getElementById('submit-btn');
-      const feedbackEl = document.getElementById('feedback');
-      const phraseEl = document.getElementById('phrase');
-      const leftImg = document.getElementById('left-img');
-      const rightImg = document.getElementById('right-img');
-      const modal = document.getElementById('modal');
-      const modalBody = document.getElementById('modal-body');
-      const modalOk = document.getElementById('modal-ok');
-      const modalTitle = document.getElementById('modal-title');
+    <div class="right"><img id="rightImg" src=""></div>
+</div>
 
-      let Q = {};
-      let currentDateStr = null;
-      const placeholder = 'placeholder.jpg';
+<script>
+let data = {};
+let currentDate = null;
+let popupForced = false;
 
-      dateInput.min = '2025-12-20';
-      dateInput.max = '2026-12-31';
+async function loadData() {
+    const res = await fetch("Q.json");
+    data = await res.json();
+}
 
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth()+1).padStart(2,'0');
-      const dd = String(today.getDate()).padStart(2,'0');
-      const todayStr = `${yyyy}-${mm}-${dd}`;
-      dateInput.value = (todayStr >= dateInput.min && todayStr <= dateInput.max) ? todayStr : dateInput.min;
+function showPopup(text) {
+    document.getElementById("disclaimerText").innerText = text;
+    document.getElementById("popup").style.display = "flex";
+}
 
-      fetch('Q.json').then(r => r.json()).then(json => {
-        Q = json || {};
-        openDisclaimerForSelectedDate();
-      }).catch(() => {
-        Q = {};
-        modalBody.textContent = 'Disclaimer non disponibile (Q.json non trovato).';
-        modalTitle.textContent = 'Disclaimer';
-        showModal();
-      });
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
+    popupForced = false;
+}
 
-      function isFutureDate(v){
-        const sel = new Date(v + 'T00:00:00');
-        const now = new Date();
-        const todayOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        return sel > todayOnly;
-      }
+function resetContent() {
+    document.getElementById("question").innerText = "";
+    document.getElementById("feedback").innerText = "";
+    document.getElementById("phrase").innerText = "";
+    document.getElementById("phrase").style.display = "none";
 
-      function showModal(){
-        modal.style.display = 'flex';
-        answerInput.disabled = true;
-        submitBtn.disabled = true;
-      }
+    document.getElementById("leftImg").src = "placeholder.jpg";
+    document.getElementById("rightImg").src = "placeholder.jpg";
+    document.querySelector(".right").style.visibility = "hidden";
+}
 
-      function hideModal(){
-        modal.style.display = 'none';
-        answerInput.disabled = false;
-        submitBtn.disabled = false;
-        answerInput.focus();
-      }
+function loadImages(date) {
+    const leftPath = `Sx/${date}.jpg`;
+    const rightPath = `Dx/${date}.jpg`;
 
-      function openDisclaimerForSelectedDate(){
-        feedbackEl.textContent = '';
-        phraseEl.style.display = 'none';
-        answerInput.value = '';
+    const leftImg = document.getElementById("leftImg");
+    const rightImg = document.getElementById("rightImg");
 
-        const v = dateInput.value;
-        currentDateStr = v;
+    leftImg.src = leftPath;
+    rightImg.src = rightPath;
 
-        if (isFutureDate(v)) {
-          modalTitle.textContent = 'Hey...';
-          modalBody.textContent = 'Non spiociare il futuro!!!';
-          setImagesVisible(false);
-          questionEl.textContent = 'Data futura: nessuna domanda mostrata';
-          showModal();
-          return;
-        }
+    leftImg.onerror = () => leftImg.src = "placeholder.jpg";
+    rightImg.onerror = () => rightImg.src = "placeholder.jpg";
+}
 
-        const entry = Q[v];
-        modalTitle.textContent = 'Disclaimer';
-        modalBody.textContent = entry && entry.disclaimer ? entry.disclaimer : 'Attenzione: disclaimer non trovato per questa data.';
-        showModal();
-      }
+function loadQuestion(date) {
+    resetContent();
 
-      function setImagesVisible(visible){
-        const leftFrame = document.getElementById('left-frame');
-        const rightFrame = document.getElementById('right-frame');
-        leftFrame.style.visibility = visible ? 'visible' : 'hidden';
-        rightFrame.style.visibility = visible ? 'visible' : 'hidden';
-        leftImg.style.visibility = visible ? 'visible' : 'hidden';
-        rightImg.style.visibility = visible ? 'visible' : 'hidden';
-      }
+    const today = new Date().toISOString().split("T")[0];
 
-      function loadContentForDate(v){
-        if (isFutureDate(v)) {
-          setImagesVisible(false);
-          questionEl.textContent = 'Data futura: nessuna domanda mostrata';
-          feedbackEl.textContent = '';
-          phraseEl.style.display = 'none';
-          return;
-        }
+    // controllo data futura
+    if (date > today) {
+        popupForced = true;
+        showPopup("Non spiociare il futuro!!!");
+        return;
+    }
 
-        const entry = Q[v];
+    const q = data[date];
+    if (!q) {
+        showPopup("Nessun dato disponibile.");
+        return;
+    }
 
-        if (!entry) {
-          questionEl.textContent = 'Nessuna domanda disponibile per questa data.';
-          setImagesVisible(false);
-          feedbackEl.textContent = '';
-          phraseEl.style.display = 'none';
-          return;
-        }
+    showPopup(q.disclaimer);
 
-        questionEl.textContent = entry.answer || '---';
+    document.getElementById("question").innerText = q.question;
 
-        leftImg.src = `Sx/${v}.jpg`;
-        leftImg.onerror = function(){ this.src = placeholder; };
+    loadImages(date);
+}
 
-        rightImg.src = `Dx/${v}.jpg`;
-        rightImg.onerror = function(){ this.src = placeholder; };
+function checkAnswer() {
+    const input = document.getElementById("answerInput").value.trim();
+    const q = data[currentDate];
+    const feedbackEl = document.getElementById("feedback");
+    const phraseEl = document.getElementById("phrase");
 
-        setImagesVisible(true);
-        document.querySelector('.right').style.visibility = 'hidden';
+    if (!q) return;
 
-        feedbackEl.textContent = '';
-        phraseEl.style.display = 'none';
-      }
+    if (input === q.answer) {
+        feedbackEl.innerHTML = "";
+        phraseEl.innerText = q.phrase;
+        phraseEl.style.color = "limegreen";
+        phraseEl.style.display = "block";
+        document.querySelector(".right").style.visibility = "visible";
+    } else {
+        feedbackEl.innerHTML = '<span style="color:#ff3333">Ops... Risposta sbagliata!!!</span>';
+        phraseEl.innerText = "";
+        phraseEl.style.display = "none";
+        document.querySelector(".right").style.visibility = "hidden";
+    }
+}
 
-      dateInput.addEventListener('change', openDisclaimerForSelectedDate);
+document.getElementById("datePicker").addEventListener("change", (e) => {
+    currentDate = e.target.value;
+    loadQuestion(currentDate);
+});
 
-      modalOk.addEventListener('click', () => {
-        const v = dateInput.value;
-        hideModal();
-        if (isFutureDate(v)) {
-          setImagesVisible(false);
-          document.querySelector('.right').style.visibility = 'hidden';
-          questionEl.textContent = 'Data futura: nessuna domanda mostrata';
-          return;
-        }
-        loadContentForDate(v);
-      });
+// INIT
+window.onload = async () => {
+    await loadData();
+    const start = "2025-12-11";
+    document.getElementById("datePicker").value = start;
+    currentDate = start;
+    loadQuestion(start);
+};
+</script>
 
-      submitBtn.addEventListener('click', checkAnswer);
-      answerInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') checkAnswer(); });
-
-      function checkAnswer(){
-        const v = dateInput.value;
-
-        if (isFutureDate(v)) {
-          feedbackEl.innerHTML = '<span style="color:#ff3333">Ops... Risposta sbagliata!!!</span>';
-          phraseEl.style.display = 'none';
-          return;
-        }
-
-        const entry = Q[v];
-        if (!entry) {
-          feedbackEl.innerHTML = '<span style="color:#ff3333">Ops... Risposta sbagliata!!!</span>';
-          phraseEl.style.display = 'none';
-          return;
-        }
-
-        const userAns = (answerInput.value || '').trim();
-        const correctAns = (entry.answer || '').trim();
-
-        const ok = userAns.toLowerCase() === correctAns.toLowerCase();
-
-        if (ok){
-          feedbackEl.textContent = '';
-          phraseEl.textContent = entry.phrase || '';
-          phraseEl.style.display = 'inline-block';
-          phraseEl.style.color = '#0a0';
-          phraseEl.style.background = 'rgba(255,255,255,0.06)';
-          document.querySelector('.right').style.visibility = 'visible';
-          setImagesVisible(true);
-        } else {
-          feedbackEl.innerHTML = '<span style="color:#ff3333">Ops... Risposta sbagliata!!!</span>';
-          phraseEl.textContent = '';
-          phraseEl.style.display = 'none';
-          document.querySelector('.right').style.visibility = 'hidden';
-        }
-      }
-    })();
-  </script>
 </body>
 </html>
