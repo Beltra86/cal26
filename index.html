@@ -3,10 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Giuggiolendario</title>
-
+<title>Daily Q - Calendario</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 <style>
 :root{
   --violet:#6a4bdc;
@@ -20,18 +18,13 @@ body{
   background: linear-gradient(135deg,var(--violet) 0%, var(--green) 100%);
   display:flex;flex-direction:column;
 }
-
-/* header */
 header{
   padding:12px 18px;display:flex;align-items:center;justify-content:space-between;
-  background: rgba(0,0,0,0.08);
-  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.08);backdrop-filter: blur(6px);
 }
 .brand{font-weight:700}
 .controls{display:flex;gap:12px;align-items:center}
-input[type="date"]{
-  padding:8px 10px;border-radius:8px;border:0;background:rgba(255,255,255,0.06);color:#fff;
-}
+input[type="date"]{padding:8px 10px;border-radius:8px;border:0;background:rgba(255,255,255,0.06);color:#fff}
 
 /* layout */
 main.app{flex:1;display:flex;gap:16px;padding:18px}
@@ -60,9 +53,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 .modal .modal-header{background:var(--modal-bg);color:#fff;padding:14px 16px;font-weight:700}
 .modal .modal-body{padding:18px;background:linear-gradient(180deg, rgba(106,75,220,0.08), rgba(0,0,0,0.02));color:#fff}
 .modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:rgba(0,0,0,0.03)}
-@media (max-width:900px){
-  .left,.right{display:none}.center{width:100%}
-}
+@media (max-width:900px){.left,.right{display:none}.center{width:100%}}
 </style>
 </head>
 <body>
@@ -82,6 +73,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   </aside>
 
   <section class="center">
+    <!-- <-- Qui mostriamo la DOMANDA (entry.question) correttamente -->
     <div class="question" id="question">Seleziona una data e accetta il disclaimer</div>
 
     <div class="answer-area" aria-hidden="false">
@@ -130,26 +122,24 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   let currentDateStr = null;
   const placeholder = 'placeholder.jpg';
 
-  // date picker range (min anticipata a 2025-12-11 come richiesto)
+  // range date: inizio anticipato a 2025-12-11 come richiesto
   dateInput.min = '2025-12-11';
   dateInput.max = '2026-12-31';
 
-  // helper: costruisce data locale (mezzanotte) da stringa 'YYYY-MM-DD'
+  // parse 'YYYY-MM-DD' -> Date locale a mezzanotte (evita problemi UTC)
   function parseLocalDateFromYYYYMMDD(ymd){
     if(!ymd) return null;
     const parts = ymd.split('-').map(p => parseInt(p,10));
     if(parts.length !== 3 || parts.some(isNaN)) return null;
-    // year, monthIndex, day -> local date at 00:00
     return new Date(parts[0], parts[1]-1, parts[2], 0, 0, 0, 0);
   }
 
-  // helper: oggi locale a mezzanotte
   function todayLocalMidnight(){
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0);
   }
 
-  // set default date: preferisci oggi se entro range, altrimenti min
+  // imposta valore di default del date picker: oggi se nel range, altrimenti min
   (function setDefaultDate(){
     const today = todayLocalMidnight();
     const yyyy = today.getFullYear();
@@ -159,13 +149,13 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
     dateInput.value = (todayStr >= dateInput.min && todayStr <= dateInput.max) ? todayStr : dateInput.min;
   })();
 
-  // carica Q.json
+  // carica Q.json (fetch; richiede server HTTP)
   fetch('Q.json').then(r => {
     if (!r.ok) throw new Error('Q.json non trovato');
     return r.json();
   }).then(json => {
     Q = json || {};
-    openDisclaimerForSelectedDate(); // subito all'apertura
+    openDisclaimerForSelectedDate(); // mostra disclaimer all'apertura
   }).catch(err => {
     console.warn(err);
     Q = {};
@@ -174,7 +164,6 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
     showModal();
   });
 
-  // mostra/nasconde modal
   function showModal(){
     modal.style.display = 'flex';
     answerInput.disabled = true;
@@ -187,7 +176,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
     answerInput.focus();
   }
 
-  // controlla se la data selezionata è futura rispetto a oggi (locale)
+  // controlla se la data selezionata è futura (confronto locale)
   function isFutureDate(ymd){
     const sel = parseLocalDateFromYYYYMMDD(ymd);
     const today = todayLocalMidnight();
@@ -195,13 +184,12 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
     return sel.getTime() > today.getTime();
   }
 
-  // mostra/nascondi immagini (cornici)
   function setImagesVisible(visible){
     document.querySelector('.left').style.visibility = visible ? 'visible' : 'hidden';
     document.querySelector('.right').style.visibility = visible ? 'visible' : 'hidden';
   }
 
-  // apri disclaimer quando si seleziona data (o all'apertura)
+  // mostra disclaimer al cambio di data o all'apertura
   function openDisclaimerForSelectedDate(){
     feedbackEl.textContent = '';
     phraseEl.style.display = 'none';
@@ -214,7 +202,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
       modalTitle.textContent = 'Hey...';
       modalBody.textContent = 'Non spiociare il futuro!!!';
       setImagesVisible(false);
-      questionEl.textContent = 'Curiosa che non sei altro';
+      questionEl.textContent = 'Data futura: nessuna domanda mostrata';
       showModal();
       return;
     }
@@ -225,7 +213,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
     showModal();
   }
 
-  // carica contenuti della data selezionata (dopo chiusura disclaimer)
+  // carica contenuti (domanda e immagini) dopo chiusura disclaimer
   function loadContentForDate(v){
     if(isFutureDate(v)){
       setImagesVisible(false);
@@ -245,17 +233,19 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
       return;
     }
 
-    // Mostra il campo `answer` come "domanda" (come richiesto in precedenza)
-    questionEl.textContent = entry.answer || '---';
+    // -------------------------
+    // CORREZIONE PRINCIPALE: MOSTRIAMO LA DOMANDA
+    // -------------------------
+    // Prima veniva mostrato entry.answer; ora mostriamo entry.question.
+    questionEl.textContent = entry.question || '---';
 
-    // carica immagini (se mancano -> placeholder gestito dall'onerror)
+    // immagini: left sempre visibile (o placeholder), right nascosta finché non c'è risposta corretta
     leftImg.src = `Sx/${v}.jpg`;
     leftImg.onerror = function(){ this.onerror=null; this.src = placeholder; };
 
     rightImg.src = `Dx/${v}.jpg`;
     rightImg.onerror = function(){ this.onerror=null; this.src = placeholder; };
 
-    // sinistra visibile; destra nascosta fino a risposta corretta
     document.querySelector('.left').style.visibility = 'visible';
     document.querySelector('.right').style.visibility = 'hidden';
 
@@ -285,6 +275,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   submitBtn.addEventListener('click', checkAnswer);
   answerInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') checkAnswer(); });
 
+  // verifica risposta usando entry.answer (confronto case-insensitive)
   function checkAnswer(){
     const v = dateInput.value;
     if (isFutureDate(v)){
@@ -306,6 +297,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
     const ok = userAns.toLowerCase() === correctAns.toLowerCase();
 
     if (ok){
+      // risposta esatta -> mostro phrase (verde) e immagine destra
       feedbackEl.textContent = '';
       phraseEl.textContent = entry.phrase || '';
       phraseEl.style.display = 'inline-block';
@@ -314,6 +306,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
       document.querySelector('.right').style.visibility = 'visible';
       document.querySelector('.left').style.visibility = 'visible';
     } else {
+      // risposta sbagliata -> solo messaggio rosso, nessuna citazione
       feedbackEl.innerHTML = '<span style="color:#ff3333">Ops... Risposta sbagliata!!!</span>';
       phraseEl.textContent = '';
       phraseEl.style.display = 'none';
@@ -321,10 +314,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
     }
   }
 
-  // fine IIFE
 })();
 </script>
 </body>
 </html>
-
-
