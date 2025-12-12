@@ -13,13 +13,13 @@
   /* Sfondo fasce intermedie, sfondo riquadro della data, sfondo del pulsante risposta */
   --colore2:0,255,0;
   
-  /* Sfondo fascia interna, colore testo in alto, colore testo data, testo della domanda, testo della risposta, testo del pulsante risposta */
+  /* Sfondo fascia interna, colore testo in alto, colore testo data, testo della domanda, testo della risposta*/
   --colore3:0,0,255;
   
   /* Sfondo fascia in alto, sfondo del disclaimer */
   --colore4:255,255,0;
   
-  /* Sfondo riquadri immagini e centrale, sfondo della risposta, bordo del disclaimer */
+  /* Sfondo riquadri immagini e centrale, sfondo della risposta, bordo del disclaimer, testo del pulsante */
   --colore5:0,255,255;
 
 }
@@ -63,7 +63,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 .answer-area input[type="text"]{flex:1;padding:10px;border-radius:8px;border:0;background:rgba(var(--colore5),1);color:var(--colore3)}
   
 /* PULSANTE  */  
-.btn{padding:10px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600;background:rgba(var(--colore2),1);color:var(--colore3)}
+.btn{padding:10px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600;background:rgba(var(--colore2),1);color:var(--colore5)}
 
 .feedback{min-height:28px;text-align:center;font-weight:700}
 /* Aggiunto font-weight:700 alla cit di risposta corretta */  
@@ -75,7 +75,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   
 .modal{width:min(720px,94%);border-radius:12px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,0.6);border: 3px solid rgb(var(--colore5))}
 /* PARTE ALTA DEL DISCLAIMER */  
-.modal .modal-header{background:rgba(var(--colore4),1);padding:14px 16px;font-weight:700;text-align:center;rgb(var(--colore1))}
+.modal .modal-header{background:rgba(var(--colore4),1);padding:14px 16px;font-weight:700;text-align:center;color:rgb(var(--colore1))}
 /* PARTE CENTRALE DEL DISCLAIMER */
 .modal .modal-body{padding:18px;background:rgba(var(--colore4),1);color:rgb(var(--colore1))}
 /* PARTE INFERIORE DEL DISCLAIMER */
@@ -347,6 +347,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
