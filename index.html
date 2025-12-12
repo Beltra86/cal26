@@ -10,10 +10,10 @@
   /* Sfondo fasce esterne, riquadro della domanda */
   --colore1:255, 0, 0;
   
-  /* Sfondo fasce intermedie, sfondo riquadro della data */
+  /* Sfondo fasce intermedie, sfondo riquadro della data, sfondo del pulsante risposta */
   --colore2:0,255,0;
   
-  /* Sfondo fascia interna, colore testo in alto, colore testo data, testo della domanda, testo della risposta */
+  /* Sfondo fascia interna, colore testo in alto, colore testo data, testo della domanda, testo della risposta, testo del pulsante risposta */
   --colore3:0,0,255;
   
   /* Sfondo fascia in alto */
@@ -33,7 +33,7 @@ body{
 header{
   padding:12px 18px;display:flex;align-items:center;justify-content:space-between;
 /* SFONDO DEL RIQUADRO IN ALTO DOVE C'E' IL TITOLO E LA DATA */
-  background: rgba(var(--colore4),0.95);backdrop-filter: blur(6px);color:rgb(var(--colore3);
+  background: rgba(var(--colore4),0.95);backdrop-filter: blur(6px);color:rgb(var(--colore3));
 }
 .brand{font-weight:700}
 .controls{display:flex;gap:12px;align-items:center}
@@ -63,7 +63,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 .answer-area input[type="text"]{flex:1;padding:10px;border-radius:8px;border:0;background:rgba(var(--colore5),1);color:var(--colore3)}
   
 /* PULSANTE  */  
-.btn{padding:10px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600;background:rgba(0,0,0,1);color:#FFD700}
+.btn{padding:10px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600;background:rgba(var(--colore2),1);color:var(--colore3)}
 
 .feedback{min-height:28px;text-align:center;font-weight:700}
 /* Aggiunto font-weight:700 alla cit di risposta corretta */  
@@ -347,6 +347,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
