@@ -9,12 +9,16 @@
 :root{
   /* Sfondo fasce esterne, riquadro della domanda */
   --colore1:51, 165, 200;
+  
   /* Sfondo fasce intermedie, sfondo riquadro della data */
   --colore2:12,210,0;
-  /* Sfondo fascia interna, colore testo data, testo della domanda */
+  
+  /* Sfondo fascia interna, colore testo in alto, colore testo data, testo della domanda */
   --colore3:156,234,14;
+  
   /* Sfondo fascia in alto */
   --colore4:0,143,0;
+  
   /* Sfondo riquadri immagini e centrale */
   --colore5:0,0,255;
 
@@ -29,7 +33,7 @@ body{
 header{
   padding:12px 18px;display:flex;align-items:center;justify-content:space-between;
 /* SFONDO DEL RIQUADRO IN ALTO DOVE C'E' IL TITOLO E LA DATA */
-  background: rgba(var(--colore4),0.95);backdrop-filter: blur(6px);
+  background: rgba(var(--colore4),0.95);backdrop-filter: blur(6px);color:rgb(var(--colore3);
 }
 .brand{font-weight:700}
 .controls{display:flex;gap:12px;align-items:center}
@@ -343,6 +347,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
