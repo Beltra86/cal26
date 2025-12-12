@@ -68,8 +68,9 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 .btn{padding:10px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600;background:rgba(var(--colore2),1);color:rgb(var(--colore5))}
 
 .feedback{min-height:28px;text-align:center;font-weight:700}
-/* Aggiunto font-weight:700 alla cit di risposta corretta */  
-.phrase{margin-top:6px;padding:8px 10px;border-radius:8px;display:inline-block;font-size: 18px;font-style: italic;font-weight:700}
+
+ /* CIT PER RISPOSTA CORRETTA */ 
+.phrase{margin-top:6px;padding:8px 10px;border-radius:8px;display:inline-block;font-size: 18px;font-style: italic;font-weight:700; background: rgba(var(--colore5), 0.1);color: rgb(var(--colore3));}
 
 /* modal */
 /* SFONODO A TUTTO SCHERMO QUANDO C'E' IL DISCLAIMER */
@@ -84,6 +85,8 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 .modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:rgba(var(--colore4),1)}
   
 @media (max-width:900px){.left,.right{display:none}.center{width:100%}}
+
+
 </style>
 </head>
   
@@ -332,8 +335,6 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
       feedbackEl.textContent = '';
       phraseEl.textContent = entry.phrase || '';
       phraseEl.style.display = 'inline-block';
-      phraseEl.style.color = '#08a045';
-      phraseEl.style.background = 'rgba(255,255,255,0.04)';
       document.querySelector('.right').style.visibility = 'visible';
       document.querySelector('.left').style.visibility = 'visible';
     } else {
@@ -349,6 +350,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
