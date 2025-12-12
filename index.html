@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* Sfondo fasce esterne, riquadro della domanda */
+  /* Sfondo fasce esterne, riquadro della domanda, testo del disclaimer */
   --colore1:255, 0, 0;
   
   /* Sfondo fasce intermedie, sfondo riquadro della data, sfondo del pulsante risposta */
@@ -16,10 +16,10 @@
   /* Sfondo fascia interna, colore testo in alto, colore testo data, testo della domanda, testo della risposta, testo del pulsante risposta */
   --colore3:0,0,255;
   
-  /* Sfondo fascia in alto */
+  /* Sfondo fascia in alto, sfondo del disclaimer */
   --colore4:255,255,0;
   
-  /* Sfondo riquadri immagini e centrale, sfondo della risposta */
+  /* Sfondo riquadri immagini e centrale, sfondo della risposta, bordo del disclaimer */
   --colore5:0,255,255;
 
 }
@@ -73,13 +73,13 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 /* SFONODO A TUTTO SCHERMO QUANDO C'E' IL DISCLAIMER */
 .modal-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9999;background:rgba(0,0,0,1)}
   
-.modal{width:min(720px,94%);border-radius:12px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,0.6);border: 3px solid #FFD700;}
+.modal{width:min(720px,94%);border-radius:12px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,0.6);border: 3px solid rgb(var(--colore5))}
 /* PARTE ALTA DEL DISCLAIMER */  
-.modal .modal-header{background:rgba(255,215,0,0.5);padding:14px 16px;font-weight:700;text-align:center;color:#000}
+.modal .modal-header{background:rgba(var(--colore4),1);padding:14px 16px;font-weight:700;text-align:center;rgb(var(--colore1))}
 /* PARTE CENTRALE DEL DISCLAIMER */
-.modal .modal-body{padding:18px;background:rgba(255,215,0,0.5);color:#000}
+.modal .modal-body{padding:18px;background:rgba(var(--colore4),1);color:rgb(var(--colore1))}
 /* PARTE INFERIORE DEL DISCLAIMER */
-.modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:rgba(255,215,0,0.5)}
+.modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:rgba(var(--colore4),1)}
   
 @media (max-width:900px){.left,.right{display:none}.center{width:100%}}
 </style>
@@ -347,6 +347,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
