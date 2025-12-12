@@ -22,6 +22,8 @@
   /* Sfondo riquadri immagini e centrale, sfondo della risposta, bordo del disclaimer, testo del pulsante */
   --colore5:0,255,255;
 
+  /* Scritta risposta sbagliata */
+  --coloreErrore: 255,51,51;
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:"Inter",system-ui,Segoe UI,Roboto,Arial;color:#fff}
@@ -308,7 +310,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   function checkAnswer(){
     const v = dateInput.value;
     if (isFutureDate(v)){
-      feedbackEl.innerHTML = '<span style="color:#ff3333">Ops... Risposta sbagliata!!!</span>';
+      feedbackEl.innerHTML = '<span style="color:rgb(var(--coloreErrore))">Ops... Risposta sbagliata!!!</span>';
       phraseEl.style.display = 'none';
       return;
     }
@@ -347,6 +349,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
