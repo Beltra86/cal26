@@ -8,16 +8,17 @@
 <style>
 :root{
   --colore1:51, 165, 200;
-  --colore2:0,0,0;
+  --colore2:12,210,0;
   --colore3:156,234,14;
-  --colore4:0,0,0;
-  --colore5:0,0,0;
+  --colore4:0,143,0;
+  --colore5:0,0,255;
 
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:"Inter",system-ui,Segoe UI,Roboto,Arial;color:#fff}
 body{
-  background: linear-gradient(135deg, rgb(var(--colore2)) 0%, rgb(var(--colore1)) 50%, rgb(var(--colore2)) 100%);
+  /* COLORAZIONE DELLO SFONDO */
+  background: linear-gradient(135deg, rgb(var(--colore1)) 0%, rgb(var(--colore2)) 25%, rgb(var(--colore3)) 50%,  rgb(var(--colore2)) 75%, rgb(var(--colore1)) 100%);
   display:flex;flex-direction:column;
 }
 header{
@@ -336,6 +337,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
