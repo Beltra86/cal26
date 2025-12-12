@@ -7,10 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
+  /* Sfondo fasce esterne */
   --colore1:51, 165, 200;
+  /* Sfondo fasce intermedie, sfondo riquadro della data */
   --colore2:12,210,0;
+  /* Sfondo fascia interna, colore testo data */
   --colore3:156,234,14;
+  /* Sfondo fascia in alto */
   --colore4:0,143,0;
+  /* Sfondo riquadri immagini e centrale */
   --colore5:0,0,255;
 
 }
@@ -24,16 +29,17 @@ body{
 header{
   padding:12px 18px;display:flex;align-items:center;justify-content:space-between;
 /* SFONDO DEL RIQUADRO IN ALTO DOVE C'E' IL TITOLO E LA DATA */
-  background: rgba(0,0,0,0.95);backdrop-filter: blur(6px);
+  background: rgba(var(--colore4),0.95);backdrop-filter: blur(6px);
 }
 .brand{font-weight:700}
 .controls{display:flex;gap:12px;align-items:center}
 /* RIQUADRO DELLA DATA */ 
-input[type="date"]{padding:8px 10px;border-radius:8px;border:0;background:rgba(0,0,0,0.95);color:#FFD700}
+input[type="date"]{padding:8px 10px;border-radius:8px;border:0;background:rgba(var(--colore2),0.95);color:rgb(var(--colore3))}
 
 /* layout */
 main.app{flex:1;display:flex;gap:16px;padding:18px}
 .left,.center,.right{
+/* RIQUADRI IMMAGINI E CENTRALE */
   background:var(--colore5);border-radius:12px;padding:14px;min-height:320px;
   box-shadow:0 6px 18px rgba(0,0,0,0.25);
 }
@@ -337,6 +343,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
