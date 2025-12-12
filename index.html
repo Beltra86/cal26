@@ -11,7 +11,8 @@
       2. Sfondo fasce intermedie, bordo disclaimer, testi disclaimer, sfondo campo cit		
       3. Sfondo fascia centrale, sfondo disclaimer		
       4. Tutti i testi, tranne il disclaimer
-      5. Sfondo pulsante, intestazione 
+      5. Sfondo pulsante, intestazione
+      6. Sfondo del campo data, meglio che sia un colore chiaro sennò non si vede il simbolino
       Err. Messaggio di errore (255,51,51) per il rosso */ 
   
   --colore1:0,0,0;
@@ -19,6 +20,7 @@
   --colore3:255,215,0;
   --colore4:255,215,0;
   --colore5:0,0,0;
+  --colore6:255,215,0;
   --coloreErrore: 255,51,51;
 }
 *{box-sizing:border-box}
@@ -36,7 +38,7 @@ header{
 .brand{font-weight:700}
 .controls{display:flex;gap:12px;align-items:center}
 /* RIQUADRO DELLA DATA */ 
-input[type="date"]{padding:8px 10px;border-radius:8px;border:0;background:rgba(var(--colore4),0.8);color:rgb(var(--colore1))}
+input[type="date"]{padding:8px 10px;border-radius:8px;border:0;background:rgba(var(--colore6),0.8);color:rgb(0,0,0)}
 
 /* layout */
 main.app{flex:1;display:flex;gap:16px;padding:18px}
@@ -351,6 +353,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
