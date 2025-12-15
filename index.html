@@ -289,7 +289,11 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
     questionEl.textContent = entry.question || '---';
 
     // immagini: left sempre visibile (o placeholder), right nascosta finché non c'è risposta corretta
-    leftImg.src = `Sx/${v}.jpg`;
+    if (entry.leftImage) {
+      leftImg.src = `Sx/${entry.leftImage}`;
+    } else {
+      leftImg.src = placeholder;
+    }
     leftImg.onerror = function(){ this.onerror=null; this.src = placeholder; };
 
     rightImg.src = `Dx/${v}.jpg`;
@@ -365,6 +369,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
