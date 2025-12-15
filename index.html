@@ -7,35 +7,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  /*  1. Sfondo fasce esterne, sfondo campi data, domanda e risposta		
-      2. Sfondo fasce intermedie, testi disclaimer, sfondo campo cit		
-      3. Sfondo fascia centrale, sfondo disclaimer		
-      4. Tutti i testi, tranne il disclaimer, bordo del pulsante, bordo del disclaimer
-      5. Sfondo pulsante, intestazione
-      6. Sfondo del campo data, meglio che sia un colore chiaro sennò non si vede il simbolino
-      Err. Messaggio di errore (255,51,51) per il rosso */ 
-
-
-/*Sfondo fasce esterne     1 
+ 
+/*Sfondo fasce esterne e intestazione    1 
   Sfondo fasce intermedie  2
   Sfondo fascia centrale   3
-  Sfondo intestazione      1
+  Tutti i testi, tranne il disclaimer, Sfondo disclaimer   4
+  Testi del disclaimer, sfondo pulsante, sfondo campi domanda e risposta e cit 5
   Sfondo del campo data, meglio che sia un colore chiaro sennò non si vede il simbolino  6
-  Sfondo campi domanda e risposta e cit  5
-  
-  Sfondo disclaimer 4
-  Testi del disclaimer 5
-  
-  Sfondo pulsante 5
-
-  Tutti i testi, tranne il disclaimer   4
-  
-
-  Bordo del pulsante  7
-  Bordo del disclaimer 7
-  Bordo dei campi domanda e risposta e cit 7
-   
+  Tutti i bordi 7
   Err. Messaggio di errore (255,51,51) per il rosso */ 
+
+  /*
+  0,0,0        Nero
+  255,255,255  Bianco
+  255,215,0    Oro
+  255,51,51    Rosso
+  */
 
   
   --colore1:166,16,34;
@@ -44,6 +31,7 @@
   --colore4:255,215,0;
   --colore5:166,16,34;
   --colore6:255,255,255;
+  --colore7:0,0,0;
   --coloreErrore: 255,51,51;
   --gradient-angle: 50deg;
 }
@@ -377,6 +365,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
