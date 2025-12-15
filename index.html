@@ -14,6 +14,29 @@
       5. Sfondo pulsante, intestazione
       6. Sfondo del campo data, meglio che sia un colore chiaro sennò non si vede il simbolino
       Err. Messaggio di errore (255,51,51) per il rosso */ 
+
+
+/*Sfondo fasce esterne     1 
+  Sfondo fasce intermedie  2
+  Sfondo fascia centrale   3
+  Sfondo intestazione      1
+  Sfondo del campo data, meglio che sia un colore chiaro sennò non si vede il simbolino  6
+  Sfondo campi domanda e risposta e cit  5
+  
+  Sfondo disclaimer 4
+  Testi del disclaimer 5
+  
+  Sfondo pulsante 5
+
+  Tutti i testi, tranne il disclaimer   4
+  
+
+  Bordo del pulsante  7
+  Bordo del disclaimer 7
+  Bordo dei campi domanda e risposta e cit 7
+   
+  Err. Messaggio di errore (255,51,51) per il rosso */ 
+
   
   --colore1:166,16,34;
   --colore2:166,16,34;
@@ -22,7 +45,7 @@
   --colore5:166,16,34;
   --colore6:255,255,255;
   --coloreErrore: 255,51,51;
-  --gradient-angle: 60deg;
+  --gradient-angle: 50deg;
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:"Inter",system-ui,Segoe UI,Roboto,Arial;color:#fff}
@@ -34,7 +57,7 @@ body{
 header{
   padding:12px 18px;display:flex;align-items:center;justify-content:space-between;
 /* SFONDO DEL RIQUADRO IN ALTO DOVE C'E' IL TITOLO E LA DATA */
-  background: rgba(var(--colore5),0.8);backdrop-filter: blur(6px);color:rgb(var(--colore4));
+  background: rgba(var(--colore1),0.8);backdrop-filter: blur(6px);color:rgb(var(--colore4));
 }
 .brand{font-weight:700}
 .controls{display:flex;gap:12px;align-items:center}
@@ -56,12 +79,12 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 .img-frame img{width:100%;height:100%;object-fit:cover;display:block}
 
 /* RIQUADRO DELLA DOMANDA */
-.question{font-size:1.15rem;font-weight:600;padding:12px;border-radius:8px;background:rgba(var(--colore1),0.8);color:rgb(var(--colore4));min-height:72px;display:flex;align-items:center;justify-content:center;text-align:center}
+.question{font-size:1.15rem;font-weight:600;padding:12px;border-radius:8px;background:rgba(var(--colore5),0.8);color:rgb(var(--colore4));min-height:72px;display:flex;align-items:center;justify-content:center;text-align:center}
 
 .answer-area{width:100%;max-width:720px;display:flex;gap:8px;align-items:center}
   
 /* RIQUADRO DELLA RISPOSTA  */  
-.answer-area input[type="text"]{flex:1;padding:10px;border-radius:8px;border:0;background:rgba(var(--colore1),0.8);color:rgb(var(--colore4))}
+.answer-area input[type="text"]{flex:1;padding:10px;border-radius:8px;border:0;background:rgba(var(--colore5),0.8);color:rgb(var(--colore4))}
 
 /* QUESTO SERVE PER COLORARE IL TESTO INSERISCI TESTO QUI */  
 .answer-area input[type="text"]::placeholder {
@@ -74,7 +97,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 .feedback{min-height:28px;text-align:center;font-weight:700}
 
  /* CIT PER RISPOSTA CORRETTA */ 
-.phrase{margin-top:6px;padding:8px 10px;border-radius:8px;display:inline-block;font-size: 18px;font-style: italic;font-weight:700; background: rgba(var(--colore2), 0.8);color: rgb(var(--colore4));}
+.phrase{margin-top:6px;padding:8px 10px;border-radius:8px;display:inline-block;font-size: 18px;font-style: italic;font-weight:700; background: rgba(var(--colore5), 0.8);color: rgb(var(--colore4));}
 
 /* modal */
 /* SFONODO A TUTTO SCHERMO QUANDO C'E' IL DISCLAIMER */
@@ -82,11 +105,11 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   
 .modal{width:min(720px,94%);border-radius:12px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,1);border: 3px solid rgb(var(--colore4))}
 /* PARTE ALTA DEL DISCLAIMER */  
-.modal .modal-header{background:rgba(var(--colore3),1);padding:14px 16px;font-weight:700;text-align:center;color:rgb(var(--colore2))}
+.modal .modal-header{background:rgba(var(--colore4),1);padding:14px 16px;font-weight:700;text-align:center;color:rgb(var(--colore5))}
 /* PARTE CENTRALE DEL DISCLAIMER */
-.modal .modal-body{padding:18px;background:rgba(var(--colore3),1);color:rgb(var(--colore2))}
+.modal .modal-body{padding:18px;background:rgba(var(--colore4),1);color:rgb(var(--colore5))}
 /* PARTE INFERIORE DEL DISCLAIMER */
-.modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:rgba(var(--colore3),1)}
+.modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:rgba(var(--colore4),1)}
   
 @media (max-width:900px){.left,.right{display:none}.center{width:100%}}
 
@@ -354,6 +377,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
