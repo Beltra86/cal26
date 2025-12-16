@@ -117,10 +117,32 @@
     "disclaimer": "",
     "leftImage": ".jpg" 
 
+       "2025-12-25": {
+    "question": "?",
+    "answer": "",
+    "phrase": "",
+    "disclaimer": "Tanti auguri, porcellino!!!",
+    "leftImage": ".jpg" 
+
+        "2025-12-26": {
+    "question": "?",
+    "answer": "",
+    "phrase": "",
+    "disclaimer": "",
+    "leftImage": ".jpg" 
+
+        "2025-12-27": {
+    "question": "?",
+    "answer": "",
+    "phrase": "",
+    "disclaimer": "",
+    "leftImage": ".jpg" 
 
 
 
-           
+
+
+            
     },
     "2026-12-31": {
     "question": "Ti è piaciuto questo giochino?",
@@ -130,6 +152,7 @@
     "leftImage": ".jpg" 
     }
 }
+
 
 
 
