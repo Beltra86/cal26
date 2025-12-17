@@ -103,18 +103,18 @@
     },
 
        "2025-12-23": {
-    "question": "?",
-    "answer": "",
-    "phrase": "",
-    "disclaimer": "",
-    "leftImage": ".jpg" 
+    "question": "Che colore è il chartreuse?",
+    "answer": "Verde",
+    "phrase": "14:34 - E l’unico con cui ho voglia di parlare sei tu",
+    "disclaimer": "Che giornata intensa un anno fa...",
+    "leftImage": "013.jpg" 
     },
 
        "2025-12-24": {
-    "question": "?",
-    "answer": "",
-    "phrase": "",
-    "disclaimer": "",
+    "question": "La nazionalità della stilista Carla Fernández?",
+    "answer": "Messicana",
+    "phrase": "22:04 - Credo che convenga vivere alla giornata e lasciare fare al caso.. O al destino... Dimmi solo che il futuro non è scritto cit.",
+    "disclaimer": "Due vecchi pirla e arrapati",
     "leftImage": ".jpg" 
     },
     
@@ -156,6 +156,7 @@
     "leftImage": ".jpg" 
     }
 }
+
 
 
 
