@@ -87,8 +87,11 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
  /* CIT PER RISPOSTA CORRETTA */ 
 .phrase{margin-top:6px;padding:8px 10px;border-radius:8px;border: 2px solid rgb(var(--colore7));display:inline-block;font-size: 18px;font-style: italic;font-weight:700; background: rgba(var(--colore5), 0.8);color: rgb(var(--colore4));}
 
+ /*FRASE PER ERRORE*/
+.feedback.error { color: rgb(var(--coloreErrore))}
+ 
 /* modal */
-/* SFONODO A TUTTO SCHERMO QUANDO C'E' IL DISCLAIMER */
+/* SFONDO A TUTTO SCHERMO QUANDO C'E' IL DISCLAIMER */
 .modal-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9999;background:rgba(0,0,0,1)}
   
 .modal{width:min(720px,94%);border-radius:12px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,1);border: 3px solid rgb(var(--colore7))}
@@ -353,14 +356,16 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   function checkAnswer(){
     const v = dateInput.value;
     if (isFutureDate(v)){
-      feedbackEl.innerHTML = '<span style="color:rgb(var(--coloreErrore))">Ops... Risposta sbagliata!!!</span>';
+      feedbackEl.textContent = 'Ops... Risposta sbagliata!!!';
+      feedbackEl.classList.add('error');
       phraseEl.style.display = 'none';
       return;
     }
 
     const entry = Q[v];
     if (!entry){
-      feedbackEl.innerHTML = '<span style="color:#ff3333">Ops... Risposta sbagliata!!!</span>';
+      feedbackEl.textContent = 'Ops... Risposta sbagliata!!!';
+      feedbackEl.classList.add('error');
       phraseEl.style.display = 'none';
       return;
     }
@@ -371,25 +376,35 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
     const ok = userAns.toLowerCase() === correctAns.toLowerCase();
 
     if (ok){
-      // risposta esatta -> mostro phrase (verde) e immagine destra
-      feedbackEl.textContent = '';
-      phraseEl.textContent = entry.phrase || '';
-      phraseEl.style.display = 'inline-block';
-      document.querySelector('.right').style.visibility = 'visible';
-      document.querySelector('.left').style.visibility = 'visible';
-    } else {
-      // risposta sbagliata -> solo messaggio rosso, nessuna citazione
-      feedbackEl.innerHTML = '<span style="color:#ff3333">Ops... Risposta sbagliata!!!</span>';
-      phraseEl.textContent = '';
-      phraseEl.style.display = 'none';
-      document.querySelector('.right').style.visibility = 'hidden';
-    }
+  // risposta esatta -> pulizia stato errore
+  feedbackEl.textContent = '';
+  feedbackEl.classList.remove('error');
+
+  // mostra la frase
+  phraseEl.textContent = entry.phrase || '';
+  phraseEl.style.display = 'inline-block';
+
+  // mostra entrambe le immagini
+  document.querySelector('.right').style.visibility = 'visible';
+  document.querySelector('.left').style.visibility = 'visible';
+
+} else {
+  // risposta sbagliata -> messaggio rosso via CSS
+  feedbackEl.textContent = 'Ops... Risposta sbagliata!!!';
+  feedbackEl.classList.add('error');
+
+  // nascondi frase e immagine destra
+  phraseEl.textContent = '';
+  phraseEl.style.display = 'none';
+  document.querySelector('.right').style.visibility = 'hidden';
+}
   }
 
 })();
 </script>
 </body>
 </html>
+
 
 
 
