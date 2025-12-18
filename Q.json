@@ -490,5 +490,12 @@
 
 
 
+"2026-12-31": {
+"question": "Ti è piaciuto questo giochino?",
+"answer": "Ovvio",
+"phrase": "TI AMO",
+"disclaimer": "Amore mio...",
+"leftImage": "025.jpg"
+}
 
 }
