@@ -157,6 +157,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 
     <div class="feedback" id="feedback" aria-live="polite"></div>
     <div id="phrase" class="phrase" style="display:none"></div>
+    <div id="song" class="phrase" style="display:none"></div>
   </section>
 
   <aside class="right">
@@ -191,6 +192,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   const modalBody = document.getElementById('modal-body');
   const modalOk = document.getElementById('modal-ok');
   const modalTitle = document.getElementById('modal-title');
+  const songEl = document.getElementById('song');
 
   let Q = {};
   let currentDateStr = null;
@@ -267,6 +269,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   function openDisclaimerForSelectedDate(){
     feedbackEl.textContent = '';
     phraseEl.style.display = 'none';
+    songEl.style.display = 'none';
     answerInput.value = '';
 
     const v = dateInput.value;
@@ -385,6 +388,15 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   phraseEl.textContent = entry.phrase || '';
   phraseEl.style.display = 'inline-block';
 
+  // mostra la citazione della canzone, se presente
+  if (entry.song && entry.song.trim() !== '') {
+    songEl.textContent = entry.song;
+    songEl.style.display = 'inline-block';
+  } else {
+    songEl.textContent = '';
+    songEl.style.display = 'none';
+  }
+
   // mostra entrambe le immagini
   document.querySelector('.right').style.visibility = 'visible';
   document.querySelector('.left').style.visibility = 'visible';
@@ -393,10 +405,13 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   // risposta sbagliata -> messaggio rosso via CSS
   feedbackEl.textContent = 'Ops... Risposta sbagliata!!!';
   feedbackEl.classList.add('error');
+   
 
-  // nascondi frase e immagine destra
+  // nascondi frase, cit e immagine destra
   phraseEl.textContent = '';
   phraseEl.style.display = 'none';
+  songEl.textContent = '';
+  songEl.style.display = 'none';
   document.querySelector('.right').style.visibility = 'hidden';
 }
   }
@@ -405,6 +420,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
