@@ -158,6 +158,8 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
     <div class="feedback" id="feedback" aria-live="polite"></div>
     <div id="phrase" class="phrase" style="display:none"></div>
     <div id="song" class="phrase" style="display:none"></div>
+    <div id="song-player" style="display:none"></div>
+   
   </section>
 
   <aside class="right">
@@ -401,6 +403,17 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   document.querySelector('.right').style.visibility = 'visible';
   document.querySelector('.left').style.visibility = 'visible';
 
+  // ----------- NUOVO: mostra player Spotify -------------
+    if (entry.link && entry.link.trim() !== '') {
+        const embedUrl = `https://open.spotify.com/embed/track/${entry.link.trim()}`;
+        document.getElementById('song-player').innerHTML = `
+            <iframe src="${embedUrl}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+        document.getElementById('song-player').style.display = 'inline-block';
+    } else {
+        document.getElementById('song-player').innerHTML = '';
+        document.getElementById('song-player').style.display = 'none';
+    }
+     
 } else {
   // risposta sbagliata -> messaggio rosso via CSS
   feedbackEl.textContent = 'Ops... Risposta sbagliata!!!';
@@ -412,6 +425,8 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   phraseEl.style.display = 'none';
   songEl.textContent = '';
   songEl.style.display = 'none';
+  document.getElementById('song-player').innerHTML = '';
+  document.getElementById('song-player').style.display = 'none';   
   document.querySelector('.right').style.visibility = 'hidden';
 }
   }
@@ -420,6 +435,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
 
 
