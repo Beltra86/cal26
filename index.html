@@ -58,4 +58,270 @@ main.app{
   flex:1;
   display:flex;
   gap:16px;
-  padding
+  padding:18px;
+}
+
+.left,.center,.right{
+  background:rgb(var(--colore5));
+  border-radius:12px;
+  padding:14px;
+  box-shadow:0 6px 18px rgba(0,0,0,1);
+}
+
+.left,.right{
+  width:22%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.center{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+}
+
+.img-frame{
+  width:100%;
+  max-width:320px;
+  height:320px;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.img-frame img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.question{
+  font-size:1.15rem;
+  font-weight:600;
+  padding:12px;
+  border-radius:8px;
+  border:2px solid rgb(var(--colore7));
+  background:rgba(var(--colore5),0.8);
+  color:rgb(var(--colore4));
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.answer-area{
+  width:100%;
+  max-width:720px;
+  display:flex;
+  gap:8px;
+}
+
+.answer-area input{
+  flex:1;
+  padding:10px;
+  border-radius:8px;
+  border:2px solid rgb(var(--colore7));
+  background:rgba(var(--colore5),0.8);
+  color:rgb(var(--colore4));
+}
+
+.answer-area input::placeholder{
+  color:rgb(var(--colore4));
+}
+
+.btn{
+  padding:10px 12px;
+  border-radius:8px;
+  border:2px solid rgb(var(--colore7));
+  background:rgba(var(--colore5),0.8);
+  color:rgb(var(--colore4));
+  font-weight:600;
+  cursor:pointer;
+}
+
+.feedback{
+  min-height:28px;
+  font-weight:700;
+  text-align:center;
+}
+
+.feedback.error{
+  color:rgb(var(--coloreErrore));
+}
+
+.phrase{
+  padding:8px 10px;
+  border-radius:8px;
+  border:2px solid rgb(var(--colore7));
+  background:rgba(var(--colore5),0.8);
+  color:rgb(var(--colore4));
+  font-style:italic;
+  font-weight:700;
+  display:none;
+}
+
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#000;
+  z-index:9999;
+}
+
+.modal{
+  width:min(720px,94%);
+  border-radius:12px;
+  border:3px solid rgb(var(--colore7));
+  overflow:hidden;
+}
+
+.modal-header,
+.modal-body,
+.modal-footer{
+  background:rgb(var(--colore4));
+  color:rgb(var(--colore5));
+  padding:16px;
+}
+
+.modal-footer{
+  text-align:right;
+}
+
+@media (max-width:900px){
+  main.app{flex-direction:column;align-items:center}
+  .left,.right{width:100%}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">Il giuggiolendario del mio amore</div>
+  <div>
+    <label>Seleziona data</label>
+    <input id="date" type="date">
+  </div>
+</header>
+
+<main class="app">
+  <aside class="left">
+    <div class="img-frame"><img id="left-img" src="placeholder.jpg"></div>
+  </aside>
+
+  <section class="center">
+    <div id="question" class="question"></div>
+
+    <div class="answer-area">
+      <input id="answer" type="text" placeholder="Inserisci la tua risposta…">
+      <button id="send" class="btn">Invia</button>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+    <div id="phrase" class="phrase"></div>
+    <div id="song" class="phrase"></div>
+  </section>
+
+  <aside class="right" style="visibility:hidden">
+    <div class="img-frame"><img id="right-img" src="placeholder.jpg"></div>
+  </aside>
+</main>
+
+<div id="modal" class="modal-backdrop" style="display:none">
+  <div class="modal">
+    <div class="modal-header" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button id="modal-ok" class="btn">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+
+const dateInput = document.getElementById('date');
+const questionEl = document.getElementById('question');
+const answerEl = document.getElementById('answer');
+const feedbackEl = document.getElementById('feedback');
+const phraseEl = document.getElementById('phrase');
+const songEl = document.getElementById('song');
+const leftImg = document.getElementById('left-img');
+const rightImg = document.getElementById('right-img');
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modal-title');
+const modalBody = document.getElementById('modal-body');
+
+let Q = {};
+const placeholder = 'placeholder.jpg';
+
+dateInput.min = '2025-12-11';
+dateInput.max = '2026-12-31';
+
+fetch('Q.json')
+  .then(r => r.json())
+  .then(j => { Q = j; showDisclaimer(); });
+
+function resetUI(){
+  feedbackEl.textContent = '';
+  feedbackEl.classList.remove('error');
+  phraseEl.style.display = 'none';
+  songEl.style.display = 'none';
+  document.querySelector('.right').style.visibility = 'hidden';
+}
+
+function showDisclaimer(){
+  resetUI();
+  const e = Q[dateInput.value];
+  modalTitle.textContent = 'PICDDQTA';
+  modalBody.textContent = e?.disclaimer || 'Disclaimer non disponibile';
+  modal.style.display = 'flex';
+}
+
+document.getElementById('modal-ok').onclick = () => {
+  modal.style.display = 'none';
+  loadContent();
+};
+
+function loadContent(){
+  const e = Q[dateInput.value];
+  if(!e) return;
+  questionEl.textContent = e.question;
+  leftImg.src = e.leftImage ? `Sx/${e.leftImage}` : placeholder;
+  rightImg.src = `Dx/${dateInput.value}.jpg`;
+}
+
+document.getElementById('send').onclick = () => {
+  const e = Q[dateInput.value];
+  if(!e) return;
+
+  if(answerEl.value.trim().toLowerCase() === e.answer.toLowerCase()){
+    phraseEl.textContent = e.phrase;
+    phraseEl.style.display = 'inline-block';
+
+    if(e.song){
+      songEl.textContent = e.song;
+      songEl.style.display = 'inline-block';
+    }
+
+    document.querySelector('.right').style.visibility = 'visible';
+    feedbackEl.textContent = '';
+  } else {
+    feedbackEl.textContent = 'Ops... Risposta sbagliata!!!';
+    feedbackEl.classList.add('error');
+    resetUI();
+  }
+};
+
+dateInput.onchange = showDisclaimer;
+
+})();
+</script>
+
+</body>
+</html>
