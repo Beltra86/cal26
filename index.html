@@ -17,6 +17,7 @@
   5. Testi del disclaimer, sfondo pulsante, sfondo campi domanda e risposta e cit 
   6. Sfondo del campo data, meglio che sia un colore chiaro sennò non si vede il simbolino  
   7. Tutti i bordi 
+  8. Quarto colore per lo sfondo
   Err. Messaggio di errore (255,51,51) per il rosso */ 
 
   /*
@@ -27,9 +28,10 @@
   */
 
   
-  --colore1:0,0,0;
-  --colore2:156,79,166;
-  --colore3:245,90,134;
+  --colore1:48,9,44;
+  --colore2:0,0,0;
+  --colore3:31, 255, 69;
+  --colore8:103,36,128;
   --colore4:0,0,0;
   --colore5:12,240,69;
   --colore6:33,188,235;
@@ -41,7 +43,16 @@
 html,body{height:100%;margin:0;font-family:"Inter",system-ui,Segoe UI,Roboto,Arial;color:#fff}
 body{
   /* COLORAZIONE DELLO SFONDO */
-  background: linear-gradient(var(--gradient-angle), rgb(var(--colore1)) 40%, rgb(var(--colore2)) 41%, rgb(var(--colore1)) 42%, rgb(var(--colore1)) 49%, rgb(var(--colore3)) 50%, rgb(var(--colore1)) 51%, rgb(var(--colore1)) 58%, rgb(var(--colore2)) 59%, rgb(var(--colore1)) 60%);
+  background: linear-gradient(var(--gradient-angle), 
+                              rgb(var(--colore1)) 40%, 
+                              rgb(var(--colore2)) 41%, 
+                              rgb(var(--colore1)) 42%, 
+                              rgb(var(--colore1)) 49%, 
+                              rgb(var(--colore3)) 50%, 
+                              rgb(var(--colore1)) 51%, 
+                              rgb(var(--colore1)) 58%, 
+                              rgb(var(--colore2)) 59%, 
+                              rgb(var(--colore1)) 60%);
   display:flex;flex-direction:column;
 }
 header{
@@ -446,4 +457,5 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 </script>
 </body>
 </html>
+
 
