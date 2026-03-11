@@ -1,261 +1,470 @@
-<!DOCTYPE html>
+
+
+<!doctype html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<title>Countdown</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Giuggiolendario</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
+:root{
+ 
+/*1. Sfondo fasce esterne e intestazione    
+  2. Sfondo fasce intermedie  
+  3. Sfondo fascia centrale   
+  4. Tutti i testi, tranne il disclaimer, Sfondo disclaimer   
+  5. Testi del disclaimer, sfondo pulsante, sfondo campi domanda e risposta e cit 
+  6. Sfondo del campo data, meglio che sia un colore chiaro sennò non si vede il simbolino  
+  7. Tutti i bordi 
+  8. Quarto colore per lo sfondo
+  Err. Messaggio di errore (255,51,51) per il rosso */ 
 
+  /*
+  0,0,0        Nero
+  255,255,255  Bianco
+  255,215,0    Oro
+  255,51,51    Rosso
+  */
+
+  
+  --colore1:48,9,44;
+  --colore2:0,0,0;
+  --colore3:23,235,72;
+  --colore8:48, 5, 31;
+  --colore4:0,0,0;
+  --colore5:23,235,72;
+  --colore6:23,235,72;
+  --colore7:48,5,31;
+  --coloreErrore: 111,0,255;
+  --gradient-angle: 115deg;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:"Inter",system-ui,Segoe UI,Roboto,Arial;color:#fff}
 body{
-    font-family:system-ui,sans-serif;
-    background:linear-gradient(135deg,#111827,#020617);
-    margin:0;
-    padding:40px;
-    color:white;
+  /* COLORAZIONE DELLO SFONDO */
+  background: linear-gradient(var(--gradient-angle), 
+                              rgb(var(--colore2)) 25%, 
+                              rgb(var(--colore8)) 27%, 
+                              rgb(var(--colore2)) 29%, 
+                              rgb(var(--colore1)) 71%, 
+                              rgb(var(--colore3)) 73%, 
+                              rgb(var(--colore1)) 75% 
+                              );
+  display:flex;flex-direction:column;
+}
+header{
+  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;
+/* SFONDO DEL RIQUADRO IN ALTO DOVE C'E' IL TITOLO E LA DATA */
+  background: rgba(var(--colore1),0.8);backdrop-filter: blur(6px);color:rgb(var(--colore4));
+}
+.brand{font-weight:700}
+.controls{display:flex;gap:12px;align-items:center}
+/* RIQUADRO DELLA DATA */ 
+input[type="date"]{padding:8px 10px;border-radius:8px;border:0;background:rgba(var(--colore6),0.8);color:rgb(0,0,0)}
+
+/* layout */
+main.app{flex:1;display:flex;gap:16px;padding:18px}
+.left,.center,.right{
+/* RIQUADRI IMMAGINI E CENTRALE */
+  background:var(--colore5);border-radius:12px;padding:14px;min-height:320px;
+  box-shadow:0 6px 18px rgba(0,0,0,1);
+}
+.left,.right{width:22%;display:flex;align-items:center;justify-content:center}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;gap:12px}
+
+/* RIQUADRO IMMAGINI */   
+.img-frame{width:100%;max-width:320px;height:320px;border-radius:10px;overflow:hidden;background:rgba(var(--colore5),0.8);display:flex;align-items:center;justify-content:center}
+.img-frame img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* RIQUADRO DELLA DOMANDA */
+.question{font-size:1.15rem;font-weight:600;padding:12px;border-radius:8px;border: 2px solid rgb(var(--colore7));background:rgba(var(--colore5),0.8);color:rgb(var(--colore4));min-height:72px;display:flex;align-items:center;justify-content:center;text-align:center}
+
+.answer-area{width:100%;max-width:720px;display:flex;gap:8px;align-items:center}
+  
+/* RIQUADRO DELLA RISPOSTA  */  
+.answer-area input[type="text"]{flex:1;padding:10px;border-radius:8px;border: 2px solid rgb(var(--colore7));background:rgba(var(--colore5),0.8);color:rgb(var(--colore4))}
+
+/* QUESTO SERVE PER COLORARE IL TESTO INSERISCI TESTO QUI */  
+.answer-area input[type="text"]::placeholder {
+  color: rgb(var(--colore4));
+}
+  
+/* PULSANTE  */  
+.btn{padding:10px 12px;border-radius:8px;border: 2px solid rgb(var(--colore7));cursor:pointer;font-weight:600;background:rgba(var(--colore5),0.8);color:rgb(var(--colore4))}
+
+.feedback{min-height:28px;text-align:center;font-weight:700}
+
+ /* CIT PER RISPOSTA CORRETTA */ 
+.phrase{margin-top:6px;padding:8px 10px;border-radius:8px;border: 2px solid rgb(var(--colore7));display:inline-block;font-size: 18px;font-style: italic;font-weight:700; background: rgba(var(--colore5), 0.8);color: rgb(var(--colore4));}
+
+ /*FRASE PER ERRORE*/
+.feedback.error { color: rgb(var(--coloreErrore))}
+ 
+/* modal */
+/* SFONDO A TUTTO SCHERMO QUANDO C'E' IL DISCLAIMER */
+.modal-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9999;background:rgba(0,0,0,1)}
+  
+.modal{width:min(720px,94%);border-radius:12px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,1);border: 3px solid rgb(var(--colore7))}
+/* PARTE ALTA DEL DISCLAIMER */  
+.modal .modal-header{background:rgba(var(--colore4),1);padding:14px 16px;font-weight:700;text-align:center;color:rgb(var(--colore5))}
+/* PARTE CENTRALE DEL DISCLAIMER */
+.modal .modal-body{padding:18px;background:rgba(var(--colore4),1);color:rgb(var(--colore5))}
+/* PARTE INFERIORE DEL DISCLAIMER */
+.modal .modal-footer{padding:12px 16px;display:flex;justify-content:flex-end;background:rgba(var(--colore4),1)}
+  
+@media (max-width:900px){
+  main.app{
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .left,
+  .right{
+    width:100%;
+    max-width:360px;
+    min-height:auto;
+    padding:8px;
+  }
+
+  .img-frame{
+    height:220px;
+  }
+
+  .center{
+    width:100%;
+  }
+
+ #song-player {
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 2px solid rgb(var(--colore7));
+  background: rgba(var(--colore5), 0.8);
+  display: none; /* rimane nascosto finché non c'è la canzone */
+  max-width: 320px;
+}
 }
 
-#countdowns{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:20px;
-    max-width:1000px;
-    margin:auto;
-}
-
-.card{
-    border-radius:16px;
-    padding:20px;
-    background:rgba(255,255,255,0.05);
-    box-shadow:0 10px 25px rgba(0,0,0,0.5);
-}
-
-.title{
-    font-size:18px;
-    font-weight:600;
-    margin-bottom:15px;
-    text-align:center;
-}
-
-.time-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:8px;
-}
-
-.box{
-    background:rgba(255,255,255,0.15);
-    border-radius:10px;
-    padding:10px 6px;
-    text-align:center;
-}
-
-.number{
-    font-size:22px;
-    font-weight:700;
-}
-
-.label{
-    font-size:11px;
-}
 
 </style>
-
 </head>
+  
 <body>
+<header>
+  <div class="brand">Il giuggiolendario del mio amore</div>
+  <div class="controls">
+    <label for="date">Seleziona data</label>
+    <input id="date" type="date" />
+  </div>
+</header>
 
-<div id="countdowns"></div>
+<main class="app" aria-live="polite">
+  <aside class="left">
+    <div class="img-frame" id="left-frame">
+      <img id="left-img" src="placeholder.jpg" alt="Immagine sinistra" onerror="this.src='placeholder.jpg'">
+    </div>
+  </aside>
+
+  <section class="center">
+    <!-- <-- Qui mostriamo la DOMANDA (entry.question) correttamente -->
+    <div class="question" id="question"> </div>
+
+    <div class="answer-area" aria-hidden="false">
+      <input id="answer-input" type="text" placeholder="Inserisci la tua risposta..." autocomplete="off" />
+      <button id="submit-btn" class="btn">Invia</button>
+    </div>
+
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <div id="phrase" class="phrase" style="display:none"></div>
+    <div id="song" class="phrase" style="display:none"></div>
+    <div id="song-player" style="display:none"></div>
+   
+  </section>
+
+  <aside class="right">
+    <div class="img-frame" id="right-frame">
+      <img id="right-img" src="placeholder.jpg" alt="Immagine destra" onerror="this.src='placeholder.jpg'">
+    </div>
+  </aside>
+</main>
+
+<!-- Modal disclaimer -->
+<div id="modal" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true">
+  <div class="modal" role="document">
+    <div class="modal-header" id="modal-title">Miglior persona del mondo chi legge</div>
+    <div class="modal-body" id="modal-body">Caricamento disclaimer...</div>
+    <div class="modal-footer">
+      <button id="modal-ok" class="btn">OK</button>
+    </div>
+  </div>
+</div>
 
 <script>
+(function(){
+  const dateInput = document.getElementById('date');
+  const questionEl = document.getElementById('question');
+  const answerInput = document.getElementById('answer-input');
+  const submitBtn = document.getElementById('submit-btn');
+  const feedbackEl = document.getElementById('feedback');
+  const phraseEl = document.getElementById('phrase');
+  const leftImg = document.getElementById('left-img');
+  const rightImg = document.getElementById('right-img');
+  const modal = document.getElementById('modal');
+  const modalBody = document.getElementById('modal-body');
+  const modalOk = document.getElementById('modal-ok');
+  const modalTitle = document.getElementById('modal-title');
+  const songEl = document.getElementById('song');
 
-const sheetURL =
-"https://opensheet.elk.sh/1gNGAPtIwKy71SMjwxrb8sJbFn9FVkpZ7cqMkL4QZEK0/Countdown";
+  let Q = {};
+  let currentDateStr = null;
+  const placeholder = 'placeholder.jpg';
 
-const colors=[
-"#6366f1",
-"#ef4444",
-"#10b981",
-"#f59e0b",
-"#3b82f6",
-"#8b5cf6",
-"#ec4899",
-"#14b8a6"
-];
+  // range date: inizio anticipato a 2025-12-11 come richiesto
+  dateInput.min = '2025-12-11';
+  dateInput.max = '2026-12-31';
 
-async function loadCountdowns(){
+  // parse 'YYYY-MM-DD' -> Date locale a mezzanotte (evita problemi UTC)
+  function parseLocalDateFromYYYYMMDD(ymd){
+    if(!ymd) return null;
+    const parts = ymd.split('-').map(p => parseInt(p,10));
+    if(parts.length !== 3 || parts.some(isNaN)) return null;
+    return new Date(parts[0], parts[1]-1, parts[2], 0, 0, 0, 0);
+  }
 
-const response=await fetch(sheetURL);
-const rows=await response.json();
+  function todayLocalMidnight(){
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0);
+  }
 
-const now=new Date();
+  // imposta valore di default del date picker: oggi se nel range, altrimenti min
+  (function setDefaultDate(){
+    const today = todayLocalMidnight();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth()+1).padStart(2,'0');
+    const dd = String(today.getDate()).padStart(2,'0');
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+    dateInput.value = (todayStr >= dateInput.min && todayStr <= dateInput.max) ? todayStr : dateInput.min;
+  })();
 
-const countdowns=rows.map(r=>{
+  // carica Q.json (fetch; richiede server HTTP)
+  fetch('Q.json').then(r => {
+    if (!r.ok) throw new Error('Q.json non trovato');
+    return r.json();
+  }).then(json => {
+    Q = json || {};
+    openDisclaimerForSelectedDate(); // mostra disclaimer all'apertura
+  }).catch(err => {
+    console.warn(err);
+    Q = {};
+    modalBody.textContent = 'Disclaimer non disponibile (Q.json non trovato).';
+    modalTitle.textContent = 'PICDDQTA';
+    showModal();
+  });
 
-const dateString=r.Data+"T"+r.Ora+":00";
+  function showModal(){
+    modal.style.display = 'flex';
+    answerInput.disabled = true;
+    submitBtn.disabled = true;
+  }
+  function hideModal(){
+    modal.style.display = 'none';
+    answerInput.disabled = false;
+    submitBtn.disabled = false;
+    answerInput.focus();
+  }
 
-return{
-title:r.Evento,
-date:dateString
-};
+  // controlla se la data selezionata è futura (confronto locale)
+  function isFutureDate(ymd){
+    const sel = parseLocalDateFromYYYYMMDD(ymd);
+    const today = todayLocalMidnight();
+    if(!sel) return false;
+    return sel.getTime() > today.getTime();
+  }
 
-})
-.filter(c=>new Date(c.date)>now)
-.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  function setImagesVisible(visible){
+    document.querySelector('.left').style.visibility = visible ? 'visible' : 'hidden';
+    document.querySelector('.right').style.visibility = visible ? 'visible' : 'hidden';
+  }
 
-const container=document.getElementById("countdowns");
+  // mostra disclaimer al cambio di data o all'apertura
+  function openDisclaimerForSelectedDate(){
+    feedbackEl.textContent = '';
+    phraseEl.style.display = 'none';
+    songEl.style.display = 'none';
+    answerInput.value = '';
 
-countdowns.forEach((cd,i)=>{
+    const v = dateInput.value;
+    currentDateStr = v;
 
-const color=colors[i%colors.length];
+    if (isFutureDate(v)){
+      modalTitle.textContent = 'Hey, curiosona ...';
+      modalBody.textContent = 'Non spiociare il futuro!!!';
+      setImagesVisible(false);
+      questionEl.textContent = 'Data futura: nessuna domanda mostrata';
+      showModal();
+      return;
+    }
 
-const card=document.createElement("div");
-card.className="card";
-card.style.border="2px solid "+color;
+    const entry = Q[v];
+    modalTitle.textContent = 'Miglior persona del mondo chi legge';
+    modalBody.textContent = entry && entry.disclaimer ? entry.disclaimer : 'Attenzione: disclaimer non trovato per questa data.';
+    showModal();
+  }
 
-card.innerHTML=`
+  // carica contenuti (domanda e immagini) dopo chiusura disclaimer
+  function loadContentForDate(v){
+    if(isFutureDate(v)){
+      setImagesVisible(false);
+      document.querySelector('.right').style.visibility = 'hidden';
+      questionEl.textContent = 'Data futura: nessuna domanda mostrata';
+      feedbackEl.textContent = '';
+      phraseEl.style.display = 'none';
+      return;
+    }
 
-<div class="title">${cd.title}</div>
+    const entry = Q[v];
+    if(!entry){
+      questionEl.textContent = 'Nessuna domanda disponibile per questa data.';
+      setImagesVisible(false);
+      feedbackEl.textContent = '';
+      phraseEl.style.display = 'none';
+      return;
+    }
 
-<div class="time-grid">
+    // -------------------------
+    // CORREZIONE PRINCIPALE: MOSTRIAMO LA DOMANDA
+    // -------------------------
+    // Prima veniva mostrato entry.answer; ora mostriamo entry.question.
+    questionEl.textContent = entry.question || '---';
 
-<div class="box">
-<div class="number n1" data-date="${cd.date}">0</div>
-<div class="label l1"></div>
-</div>
+    // immagini: left sempre visibile (o placeholder), right nascosta finché non c'è risposta corretta
+    if (entry.leftImage) {
+      leftImg.src = `Sx/${entry.leftImage}`;
+    } else {
+      leftImg.src = placeholder;
+    }
+    leftImg.onerror = function(){ this.onerror=null; this.src = placeholder; };
 
-<div class="box">
-<div class="number n2" data-date="${cd.date}">0</div>
-<div class="label l2"></div>
-</div>
+    rightImg.src = `Dx/${v}.jpg`;
+    rightImg.onerror = function(){ this.onerror=null; this.src = placeholder; };
 
-<div class="box">
-<div class="number n3" data-date="${cd.date}">0</div>
-<div class="label l3"></div>
-</div>
+    document.querySelector('.left').style.visibility = 'visible';
+    document.querySelector('.right').style.visibility = 'hidden';
 
-</div>
-`;
+    feedbackEl.textContent = '';
+    phraseEl.style.display = 'none';
+  }
 
-container.appendChild(card);
+  // eventi
+  dateInput.addEventListener('change', () => {
+    openDisclaimerForSelectedDate();
+  });
 
-});
+  modalOk.addEventListener('click', () => {
+    const v = dateInput.value;
+    hideModal();
+    if (isFutureDate(v)){
+      setImagesVisible(false);
+      document.querySelector('.right').style.visibility = 'hidden';
+      questionEl.textContent = 'Data futura: nessuna domanda mostrata';
+      feedbackEl.textContent = '';
+      phraseEl.style.display = 'none';
+      return;
+    }
+    loadContentForDate(v);
+  });
 
-startTimer();
+  submitBtn.addEventListener('click', checkAnswer);
+  answerInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') checkAnswer(); });
 
+  // verifica risposta usando entry.answer (confronto case-insensitive)
+  function checkAnswer(){
+    const v = dateInput.value;
+    if (isFutureDate(v)){
+      feedbackEl.textContent = 'Ops... Risposta sbagliata!!!';
+      feedbackEl.classList.add('error');
+      phraseEl.style.display = 'none';
+      return;
+    }
+
+    const entry = Q[v];
+    if (!entry){
+      feedbackEl.textContent = 'Ops... Risposta sbagliata!!!';
+      feedbackEl.classList.add('error');
+      phraseEl.style.display = 'none';
+      return;
+    }
+
+    const userAns = (answerInput.value || '').trim();
+    const correctAns = (entry.answer || '').trim();
+
+    const ok = userAns.toLowerCase() === correctAns.toLowerCase();
+
+    if (ok){
+  // risposta esatta -> pulizia stato errore
+  feedbackEl.textContent = '';
+  feedbackEl.classList.remove('error');
+
+  // mostra la frase
+  phraseEl.textContent = entry.phrase || '';
+  phraseEl.style.display = 'inline-block';
+
+  // mostra la citazione della canzone, se presente
+  if (entry.song && entry.song.trim() !== '') {
+    songEl.textContent = entry.song;
+    songEl.style.display = 'inline-block';
+  } else {
+    songEl.textContent = '';
+    songEl.style.display = 'none';
+  }
+
+  // mostra entrambe le immagini
+  document.querySelector('.right').style.visibility = 'visible';
+  document.querySelector('.left').style.visibility = 'visible';
+
+  // ----------- NUOVO: mostra player Spotify -------------
+    if (entry.link && entry.link.trim() !== '') {
+        const embedUrl = `https://open.spotify.com/embed/track/${entry.link.trim()}`;
+        document.getElementById('song-player').innerHTML = `
+            <iframe src="${embedUrl}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+        document.getElementById('song-player').style.display = 'inline-block';
+    } else {
+        document.getElementById('song-player').innerHTML = '';
+        document.getElementById('song-player').style.display = 'none';
+    }
+     
+} else {
+  // risposta sbagliata -> messaggio rosso via CSS
+  feedbackEl.textContent = 'Ops... Risposta sbagliata!!!';
+  feedbackEl.classList.add('error');
+   
+
+  // nascondi frase, cit e immagine destra
+  phraseEl.textContent = '';
+  phraseEl.style.display = 'none';
+  songEl.textContent = '';
+  songEl.style.display = 'none';
+  document.getElementById('song-player').innerHTML = '';
+  document.getElementById('song-player').style.display = 'none';   
+  document.querySelector('.right').style.visibility = 'hidden';
 }
+  }
 
-function diffParts(now,target){
-
-let years=target.getFullYear()-now.getFullYear();
-let months=target.getMonth()-now.getMonth();
-let days=target.getDate()-now.getDate();
-let hours=target.getHours()-now.getHours();
-let minutes=target.getMinutes()-now.getMinutes();
-let seconds=target.getSeconds()-now.getSeconds();
-
-if(seconds<0){
-seconds+=60;
-minutes--;
-}
-
-if(minutes<0){
-minutes+=60;
-hours--;
-}
-
-if(hours<0){
-hours+=24;
-days--;
-}
-
-if(days<0){
-
-let prevMonth=new Date(target.getFullYear(),target.getMonth(),0).getDate();
-days+=prevMonth;
-months--;
-
-}
-
-if(months<0){
-months+=12;
-years--;
-}
-
-return {years,months,days,hours,minutes,seconds};
-
-}
-
-function startTimer(){
-
-function update(){
-
-const now=new Date();
-
-document.querySelectorAll(".card").forEach(card=>{
-
-const date=card.querySelector(".n1").dataset.date;
-const target=new Date(date);
-
-const diff=target-now;
-
-if(diff<=0){
-card.remove();
-return;
-}
-
-const p=diffParts(now,target);
-
-let v1,v2,v3;
-let l1,l2,l3;
-
-if(p.years>0){
-
-v1=p.years; l1="anni";
-v2=p.months; l2="mesi";
-v3=p.days; l3="giorni";
-
-}
-else if(p.months>0){
-
-v1=p.months; l1="mesi";
-v2=p.days; l2="giorni";
-v3=p.hours; l3="ore";
-
-}
-else if(p.days>0){
-
-v1=p.days; l1="giorni";
-v2=p.hours; l2="ore";
-v3=p.minutes; l3="min";
-
-}
-else{
-
-v1=p.hours; l1="ore";
-v2=p.minutes; l2="min";
-v3=p.seconds; l3="sec";
-
-}
-
-card.querySelector(".n1").textContent=v1;
-card.querySelector(".n2").textContent=v2;
-card.querySelector(".n3").textContent=v3;
-
-card.querySelector(".l1").textContent=l1;
-card.querySelector(".l2").textContent=l2;
-card.querySelector(".l3").textContent=l3;
-
-});
-
-}
-
-update();
-setInterval(update,1000);
-
-}
-
-loadCountdowns();
-
+})();
 </script>
-
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
