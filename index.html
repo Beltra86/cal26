@@ -152,7 +152,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
   
 <body>
 <header>
-  <div class="brand">Il giuggiolendario del mio amore</div>
+  <div class="brand">Ma quanto ti amo? Chissà se vedrai mai questa scritta</div>
   <div class="controls">
     <label for="date">Seleziona data</label>
     <input id="date" type="date" />
@@ -192,7 +192,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
 <!-- Modal disclaimer -->
 <div id="modal" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true">
   <div class="modal" role="document">
-    <div class="modal-header" id="modal-title">Shine on me crazy giuggiola</div>
+    <div class="modal-header" id="modal-title">Il mio amore perfetto</div>
     <div class="modal-body" id="modal-body">Caricamento disclaimer...</div>
     <div class="modal-footer">
       <button id="modal-ok" class="btn">OK</button>
@@ -307,7 +307,7 @@ main.app{flex:1;display:flex;gap:16px;padding:18px}
     }
 
     const entry = Q[v];
-    modalTitle.textContent = 'Shine on me crazy giuggiola';
+    modalTitle.textContent = 'Il mio amore perfetto';
     modalBody.textContent = entry && entry.disclaimer ? entry.disclaimer : 'Attenzione: disclaimer non trovato per questa data.';
     showModal();
   }
