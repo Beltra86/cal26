@@ -28,16 +28,16 @@
   */
 
   
-  --colore1:48,9,44;
+  --colore1:11,0,255;
   --colore2:0,0,0;
-  --colore3:23,235,72;
+  --colore3:0,128,0;
   --colore8:48, 5, 31;
-  --colore4:0,0,0;
-  --colore5:23,235,72;
-  --colore6:23,235,72;
-  --colore7:48,5,31;
+  --colore4:11,0,255;
+  --colore5:0,0,0;
+  --colore6:255,215,0;
+  --colore7:255,215,0;
   --coloreErrore: 111,0,255;
-  --gradient-angle: 115deg;
+  --gradient-angle: -78deg;
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:"Inter",system-ui,Segoe UI,Roboto,Arial;color:#fff}
@@ -45,11 +45,11 @@ body{
   /* COLORAZIONE DELLO SFONDO */
   background: linear-gradient(var(--gradient-angle), 
                               rgb(var(--colore2)) 25%, 
-                              rgb(var(--colore8)) 27%, 
+                              rgb(var(--colore1)) 27%, 
                               rgb(var(--colore2)) 29%, 
-                              rgb(var(--colore1)) 71%, 
+                              rgb(var(--colore2)) 71%, 
                               rgb(var(--colore3)) 73%, 
-                              rgb(var(--colore1)) 75% 
+                              rgb(var(--colore2)) 75% 
                               );
   display:flex;flex-direction:column;
 }
