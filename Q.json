@@ -2641,7 +2641,7 @@
 },
 
 "2026-09-01": {
-"question": "Insieme a Schifa e un famoso palazzo",
+"question": "Insieme a Schifa è un famoso palazzo",
 "answer": "Noia",
 "phrase": "12:51 - Tipo che mi metto sul tappeto adeguatamente abbligliato e attivato e vediamo cosa succede?",
 "disclaimer": "Ops... Dimenticato di giuggiolendarti",
@@ -2660,6 +2660,15 @@
 "song": "e all'improvviso mi sento in bilico (o in pericolo...)"
 },
 
+"2026-09-03": {
+"question": "Lo storico batterista dei Derozer",
+"answer": "Spasio",
+"phrase": "14:32 - Gli occhi a cuoricino pervertito",
+"disclaimer": "Ci faremo cacciare dal Welfa oggi?",
+"leftImage": "038.jpg",
+"link": "6sBzoJcptqlnns1eJ03wXF",
+"song": "I'll not forget your name"
+},
 
 
 
